@@ -318,11 +318,16 @@ def createpdfs():
     global branch_name
     global batch_year
     global output_folder
-    #print(subjects_grades)
+    #writing in student_detail_file at result folder (XL)
+    rd =xlrd.open_workbook(students_detail_wb)
+    wb= copy(rd)
+    wb.save(output_folder+"\\"+"student_detail_new.xls")
+    #^relate with line number 654
     for student in students_name:
         
         result_canvas.insert(result_index,Canvas(output_folder+"\\"+student_enroloment_no[result_index]+".pdf",pagesize=A4))
         result_canvas[result_index].setTitle(student)
+
         '''
         These comments are for future templet of result , this is to print university name at top of the result.
         '''
@@ -465,64 +470,64 @@ def createpdfs():
         if check_current_sem(current_sem) >1:
             if is_five:
                 result_canvas[result_index].drawString(170,100,str(student_sem_1[result_index]))
-                result_canvas[result_index].drawString(170,120,str(credit_sem_1[result_index]))
+                result_canvas[result_index].drawString(170,120,str(int(credit_sem_1[result_index])))
                 result_canvas[result_index].drawString(170,60,str(result_sem_1[result_index]))
                 result_canvas[result_index].drawString(170,80,str(int(attempt_sem_1[result_index])))
             else :
                 result_canvas[result_index].drawString(205,100,str(student_sem_1[result_index]))
-                result_canvas[result_index].drawString(205,120,str(credit_sem_1[result_index]))
+                result_canvas[result_index].drawString(205,120,str(int(credit_sem_1[result_index])))
                 result_canvas[result_index].drawString(205,60,str(result_sem_1[result_index]))
                 result_canvas[result_index].drawString(205,80,str(int(attempt_sem_1[result_index])))
         if check_current_sem(current_sem) >2:
             if is_five:
                 result_canvas[result_index].drawString(210,100,str(student_sem_2[result_index]))
-                result_canvas[result_index].drawString(210,120,str(credit_sem_2[result_index]))
+                result_canvas[result_index].drawString(210,120,str(int(credit_sem_2[result_index])))
                 result_canvas[result_index].drawString(210,60,str(result_sem_2[result_index]))
                 result_canvas[result_index].drawString(210,80,str(int(attempt_sem_2[result_index])))
             else:
                 result_canvas[result_index].drawString(305,100,str(student_sem_2[result_index]))
-                result_canvas[result_index].drawString(305,120,str(credit_sem_2[result_index]))
+                result_canvas[result_index].drawString(305,120,str(int(credit_sem_2[result_index])))
                 result_canvas[result_index].drawString(305,60,str(result_sem_2[result_index]))
                 result_canvas[result_index].drawString(305,80,str(int(attempt_sem_2[result_index])))
         if check_current_sem(current_sem) >3:
             if is_five:
                 result_canvas[result_index].drawString(250,100,str(student_sem_3[result_index]))
-                result_canvas[result_index].drawString(250,120,str(credit_sem_3[result_index]))
+                result_canvas[result_index].drawString(250,120,str(int(credit_sem_3[result_index])))
                 result_canvas[result_index].drawString(250,60,str(result_sem_3[result_index]))
                 result_canvas[result_index].drawString(250,80,str(int(attempt_sem_3[result_index])))
             else:
                 result_canvas[result_index].drawString(405,100,str(student_sem_3[result_index]))
-                result_canvas[result_index].drawString(405,120,str(credit_sem_3[result_index]))
+                result_canvas[result_index].drawString(405,120,str(int(credit_sem_3[result_index])))
                 result_canvas[result_index].drawString(405,60,str(result_sem_3[result_index]))
                 result_canvas[result_index].drawString(405,80,str(int(attempt_sem_3[result_index])))
         if check_current_sem(current_sem) >4:
             result_canvas[result_index].drawString(290,100,str(student_sem_4[result_index]))
-            result_canvas[result_index].drawString(290,120,str(credit_sem_4[result_index]))
+            result_canvas[result_index].drawString(290,120,str(int(credit_sem_4[result_index])))
             result_canvas[result_index].drawString(290,60,str(result_sem_4[result_index]))
             result_canvas[result_index].drawString(290,80,str(int(attempt_sem_4[result_index])))
         if check_current_sem(current_sem) >5:
             result_canvas[result_index].drawString(330,100,str(student_sem_5[result_index]))
-            result_canvas[result_index].drawString(330,120,str(credit_sem_5[result_index]))
+            result_canvas[result_index].drawString(330,120,str(int(credit_sem_5[result_index])))
             result_canvas[result_index].drawString(330,60,str(result_sem_5[result_index]))
             result_canvas[result_index].drawString(330,80,str(int(attempt_sem_5[result_index])))
         if check_current_sem(current_sem) >6:
             result_canvas[result_index].drawString(370,100,str(student_sem_6[result_index]))
-            result_canvas[result_index].drawString(370,120,str(credit_sem_6[result_index]))
+            result_canvas[result_index].drawString(370,120,str(int(credit_sem_6[result_index])))
             result_canvas[result_index].drawString(370,60,str(result_sem_6[result_index]))
             result_canvas[result_index].drawString(370,80,str(int(attempt_sem_6[result_index])))
         if check_current_sem(current_sem) >7:
             result_canvas[result_index].drawString(410,100,str(student_sem_7[result_index]))
-            result_canvas[result_index].drawString(410,120,str(credit_sem_7[result_index]))
+            result_canvas[result_index].drawString(410,120,str(int(credit_sem_7[result_index])))
             result_canvas[result_index].drawString(410,60,str(result_sem_7[result_index]))
             result_canvas[result_index].drawString(410,80,str(int(attempt_sem_7[result_index])))
         if check_current_sem(current_sem) >8:
             result_canvas[result_index].drawString(450,100,str(student_sem_8[result_index]))
-            result_canvas[result_index].drawString(450,120,str(credit_sem_8[result_index]))
+            result_canvas[result_index].drawString(450,120,str(int(credit_sem_8[result_index])))
             result_canvas[result_index].drawString(450,60,str(result_sem_8[result_index]))
             result_canvas[result_index].drawString(450,80,str(int(attempt_sem_8[result_index])))
         if check_current_sem(current_sem) >9:
             result_canvas[result_index].drawString(490,100,str(student_sem_9[result_index]))
-            result_canvas[result_index].drawString(490,120,str(credit_sem_9[result_index]))
+            result_canvas[result_index].drawString(490,120,str(int(credit_sem_9[result_index])))
             result_canvas[result_index].drawString(490,60,str(result_sem_9[result_index]))
             result_canvas[result_index].drawString(490,80,str(int(attempt_sem_9[result_index])))
         #
@@ -608,6 +613,9 @@ def createpdfs():
         sem_grade_avg = grade_credit_sum/sum(course_credits)
         result_canvas[result_index].drawString(50,235,"Semester Grade Point Average(SGPA) = "+str(round(sem_grade_avg,3)))
         # FOR ATKT/BACKLOG
+        #
+       
+        #
         #LIST FOR PRINTING SGPA AND CREDITS OF CURRENT SEM at pdf
         if is_five:
             co_ordinate = [0,170,210,250,290,330,370,410,450,490,530]
@@ -621,7 +629,7 @@ def createpdfs():
         result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],60,str(is_ATKT_fail))
         #if "PASS" in is_ATKT_fail.upper():
         result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],80,str(1))
-        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],120,str(grade_credit_sum))
+        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],120,str(int(sum(course_credits))))
 
         today = date.today()
         data_of_issue = today.strftime("%B %d, %Y")
@@ -632,70 +640,76 @@ def createpdfs():
         result_canvas[result_index].save()
         result_index = result_index + 1
         #writing in student_detail_file (XL)
-        rd =xlrd.open_workbook(students_detail_wb)
-        wb= copy(rd)
-        w_sheet = wb.get_sheet(0)
+        
+        rd1 =xlrd.open_workbook(output_folder+"\\"+"student_detail_new.xls")
+        wb1= copy(rd1)
+        w_sheet = wb1.get_sheet(0)
         w_sheet.write(strt_index_r,strt_index_c,float(round(sem_grade_avg,3)))
-        wb.save(students_detail_wb)
-        w_sheet.write(strt_index_r,strt_index_c+10,int(grade_credit_sum))
-        wb.save(students_detail_wb)
+        wb1.save(output_folder+"\\"+"student_detail_new.xls")
+        w_sheet.write(strt_index_r,strt_index_c+10,int(sum(course_credits)))
+        wb1.save(output_folder+"\\"+"student_detail_new.xls")
+        w_sheet.write(strt_index_r,strt_index_c+20,str(is_ATKT_fail))
+        wb1.save(output_folder+"\\"+"student_detail_new.xls")
+        w_sheet.write(strt_index_r,strt_index_c+30,1)
+        wb1.save(output_folder+"\\"+"student_detail_new.xls")
         strt_index_r+=1
     creat_master_xlsheet()
 def creat_master_xlsheet():
     wrte = xlwt.Workbook()
     ws =wrte.add_sheet("master_sheet") 
-    ws.write(1,0,"Sr No."),ws.write(1,1,"Student Name"),ws.write(1,2,"Roll Number"),ws.write(2,2,"Credits :-")
+    ws.write(1,0,"Sr No."),ws.write(1,1,"Student Name"),ws.write(1,2,"Roll Number"),ws.write(2,3,"Credits :-"),ws.write(1,3,"Enrolment Number")
     current_colum = 3
     for sub in subject_name:
-        ws.write(0,current_colum,subject_code[current_colum-3])
-        ws.write(1,current_colum,sub)
-        ws.write(2,current_colum,course_credits[current_colum-3])
+        ws.write(0,current_colum+1,subject_code[current_colum-3])
+        ws.write(1,current_colum+1,sub)
+        ws.write(2,current_colum+1,course_credits[current_colum-3])
         current_colum +=1
-    ws.write(1,current_colum,"SGPA")
-    ws.write(1,current_colum+1,"Result")
+    ws.write(1,current_colum+1,"SGPA")
+    ws.write(1,current_colum+2,"Result")
     sem_count_iterator = 1
     for i in range(current_colum+2,current_colum+1+check_current_sem(current_sem)):
-        ws.write(1,i,f"Sem-{sem_count_iterator}")
+        ws.write(1,i+1,f"Sem-{sem_count_iterator}")
         if sem_count_iterator ==1:
             for j in range(stud_count):
-                ws.write(3+j,current_colum+2,student_sem_1[j])
+                ws.write(3+j,current_colum+2+1,student_sem_1[j])
         if sem_count_iterator ==2:
             for j in range(stud_count):
-                ws.write(3+j,current_colum+3,student_sem_2[j])
+                ws.write(3+j,current_colum+3+1,student_sem_2[j])
         if sem_count_iterator ==3:
             for j in range(stud_count):
-                ws.write(3+j,current_colum+4,student_sem_3[j])
+                ws.write(3+j,current_colum+4+1,student_sem_3[j])
         if sem_count_iterator ==4:
             for j in range(stud_count):
-                ws.write(3+j,current_colum+5,student_sem_4[j])
+                ws.write(3+j,current_colum+5+1,student_sem_4[j])
         if sem_count_iterator ==5:
             for j in range(stud_count):
-                ws.write(3+j,current_colum+6,student_sem_5[j])
+                ws.write(3+j,current_colum+6+1,student_sem_5[j])
         if sem_count_iterator ==6:
             for j in range(stud_count):
-                ws.write(3+j,current_colum+7,student_sem_6[j])
+                ws.write(3+j,current_colum+7+1,student_sem_6[j])
         if sem_count_iterator ==7:
             for j in range(stud_count):
-                ws.write(3+j,current_colum+8,student_sem_7[j])
+                ws.write(3+j,current_colum+8+1,student_sem_7[j])
         if sem_count_iterator ==8:
             for j in range(stud_count):
-                ws.write(3+j,current_colum+9,student_sem_8[j])
+                ws.write(3+j,current_colum+9+1,student_sem_8[j])
         if sem_count_iterator ==9:
             for j in range(stud_count):
-                ws.write(3+j,current_colum+10,student_sem_9[j])
+                ws.write(3+j,current_colum+10+1,student_sem_9[j])
         sem_count_iterator+=1
     row_num =1
     for name in students_name:
         ws.write(row_num+2,0,row_num)
         ws.write(row_num+2,1,name)
         ws.write(row_num+2,2,students_roll_no[row_num-1])
+        ws.write(row_num+2,3,student_enroloment_no[row_num-1])
         for sub_no in range(0,len(subject_name)):
-            ws.write(row_num+2,sub_no + 3,subjects_grades[sub_no][row_num-1])
+            ws.write(row_num+2,sub_no + 4,subjects_grades[sub_no][row_num-1])
         row_num+=1
     row_for_sgpa =1
     for sgpa in sem_grade_avg_list:
-        ws.write(row_for_sgpa+2,3+len(subject_name),sgpa)
-        ws.write(row_for_sgpa+2,4+len(subject_name),overall_result[row_for_sgpa-1])
+        ws.write(row_for_sgpa+2,4+len(subject_name),sgpa)
+        ws.write(row_for_sgpa+2,5+len(subject_name),overall_result[row_for_sgpa-1])
         #ws.write(row_num,1,name)
         row_for_sgpa+=1
     wrte.save( output_folder + "//"+ 'master sheet.xls')
@@ -929,5 +943,4 @@ gen_result.grid(row=16,column=0,columnspan=3,pady=10)
 sys_msg.grid(row=17,column=0,columnspan=3,pady=10)
 # calling the mainloop
 root.mainloop()
-
 
