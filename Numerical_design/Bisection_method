@@ -1,35 +1,28 @@
 def f(x):
-    a = 2*pow(x,3)
-    b = 3*pow(x,2)
-    c = 4*x
-    d = 6
-    return a-b+c-d
+    a = pow(x,3)
+    c = -x
+    d = -11
+    return a+c+d
 a = 0.0
 b= 0.0
+result = 0
 for i in range(-100 ,500,1):
     if f(i)>=1:
         a = i
-    elif f(i)<=-1:
+    elif f(i)<=(-1):
         b = i
-    if f(a)*f(b)<=-1:
+    if f(a)*f(b)<=(-1):
         break
-    elif f(i) == 0:
-        print(f"Found one root{i}")
-    #print('*')
-#print(f(a),"  ",f(b),"\n")
-print(a," * ",b)
-Ave = 56.0
-x = 0.0000
-while (Ave)!=(a):
-    Ave = (a+b)/2 
-    print(a ,"  ",Ave)
-    print(f(a),"  ",f(b),"\n")
-    x = Ave
-    if f(a)*f(x) <0:
+x=0
+while round(a,3)!=round(b,3):
+    x = (a+b)/2
+    if f(x) <0:
         b=x
-    elif f(x)*f(a)>0:
+    elif f(x) >0:
         a=x
-    elif f(a)*f(x)==0:
-        print(f"found a final root {x}")
+    elif f(x)==0:
+        result = x
         break
-print(f"This is super root {Ave}")
+print(a)
+
+
