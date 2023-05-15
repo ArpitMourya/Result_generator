@@ -52,6 +52,7 @@ student_sem_7,credit_sem_7,result_sem_7,attempt_sem_7 =[],[],[],[]
 student_sem_8,credit_sem_8,result_sem_8,attempt_sem_8 =[],[],[],[]
 student_sem_9,credit_sem_9,result_sem_9,attempt_sem_9 =[],[],[],[]
 student_sem_10,credit_sem_10,result_sem_10,attempt_sem_10 =[],[],[],[]
+ent_date = ""
 #
 students_roll_no = []
 student_enroloment_no = []
@@ -72,6 +73,8 @@ no_of_students = 0
 sem_grade_avg = 0
 #@
 def generate_result():
+    global ent_date
+    ent_date = date_text.get()
     global wb_subject
     global students_name; global students_father_name; global students_mother_name
     #sem details
@@ -298,6 +301,7 @@ def getGradeintocredit(cr,grade):
     else:
         return (0)
 def createpdfs():
+    global ent_date
     global wb_subject
     is_ATKT_fail = ''
     fail_credits=0
@@ -469,12 +473,12 @@ def createpdfs():
         #logic for fetching data from xl for previous sem (exclude current sem)
         if check_current_sem(current_sem) >1:
             if is_five:
-                result_canvas[result_index].drawString(170,100,str(student_sem_1[result_index]))
+                result_canvas[result_index].drawString(170,100,str(student_sem_1[result_index])+"*")
                 result_canvas[result_index].drawString(170,120,str(int(credit_sem_1[result_index])))
                 result_canvas[result_index].drawString(170,60,str(result_sem_1[result_index]))
                 result_canvas[result_index].drawString(170,80,str(int(attempt_sem_1[result_index])))
             else :
-                result_canvas[result_index].drawString(205,100,str(student_sem_1[result_index]))
+                result_canvas[result_index].drawString(205,100,str(student_sem_1[result_index])+"*")
                 result_canvas[result_index].drawString(205,120,str(int(credit_sem_1[result_index])))
                 result_canvas[result_index].drawString(205,60,str(result_sem_1[result_index]))
                 result_canvas[result_index].drawString(205,80,str(int(attempt_sem_1[result_index])))
@@ -630,9 +634,13 @@ def createpdfs():
         #if "PASS" in is_ATKT_fail.upper():
         result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],80,str(1))
         result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],120,str(int(sum(course_credits))))
-
+        
         today = date.today()
-        data_of_issue = today.strftime("%B %d, %Y")
+        data_of_issue = today.strftime("%d %B %Y")
+        if (ent_date != ""):
+            data_of_issue = ent_date
+
+        print(data_of_issue)
         result_canvas[result_index].drawString(50,200,"*Grade in repeated Examination")
         result_canvas[result_index].drawString(50,40,"DATE OF RESULT: "+data_of_issue)
 
@@ -797,6 +805,13 @@ tool = tk.Label(root, text="PDF Generator Software",
                 fg="black", font="Verdana 16")
 note = tk.Label(
     root, text="Note : Please select the excel files of subject results and student_info and click on generate results.", font=verdana_12)
+#--------------------------------
+today1 = date.today()
+curr_date = today1.strftime("%d %B %Y")
+date_text = tk.Entry(font=verdana_10)
+date_sel = tk.Label(root, text='DATE  \n'+f"{curr_date}",
+                fg="black", font="Verdana 10")
+
 # __________________________________________________________________________________________________________________________________________
 student_info = tk.Label(root, text="Students Info :", font=verdana_10)
 student_info_select = tk.Label(
@@ -887,6 +902,10 @@ department.grid(row=0, column=0, columnspan=3)
 tool.grid(row=1, column=0, columnspan=3)
 note.grid(row=2, column=0, columnspan=3,padx=20,pady=20)
 
+date_text.grid(row=17,column=2,columnspan=2,pady=5)
+date_sel.grid(row=16,column=2,columnspan=2,pady=5) 
+
+
 student_info.grid(row=3, column=0, sticky=W,padx=20)
 student_info_select.grid(row=3, column=1)
 button_explore.grid(row=3, column=2)
@@ -943,4 +962,3 @@ gen_result.grid(row=16,column=0,columnspan=3,pady=10)
 sys_msg.grid(row=17,column=0,columnspan=3,pady=10)
 # calling the mainloop
 root.mainloop()
-
