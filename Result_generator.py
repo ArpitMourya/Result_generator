@@ -41,6 +41,7 @@ wb_subject = []
 students_name = []
 students_father_name = []
 students_mother_name = []
+comment_final = []
 #for pevious sem details
 student_sem_1,credit_sem_1,result_sem_1,attempt_sem_1 =[],[],[],[]
 student_sem_2,credit_sem_2,result_sem_2,attempt_sem_2 =[],[],[],[]
@@ -52,6 +53,7 @@ student_sem_7,credit_sem_7,result_sem_7,attempt_sem_7 =[],[],[],[]
 student_sem_8,credit_sem_8,result_sem_8,attempt_sem_8 =[],[],[],[]
 student_sem_9,credit_sem_9,result_sem_9,attempt_sem_9 =[],[],[],[]
 student_sem_10,credit_sem_10,result_sem_10,attempt_sem_10 =[],[],[],[]
+ent_date = ""
 #
 students_roll_no = []
 student_enroloment_no = []
@@ -72,11 +74,14 @@ no_of_students = 0
 sem_grade_avg = 0
 #@
 def generate_result():
+    global ent_date
+    ent_date = date_text.get()
     global wb_subject
     global students_name; global students_father_name; global students_mother_name
+    global comment_final
     #sem details
     global stud_count
-    global sub_count 
+    global sub_count
     global student_sem_1;global credit_sem_1;global result_sem_1; global attempt_sem_1
     global student_sem_2;global credit_sem_2;global result_sem_2; global attempt_sem_2
     global student_sem_3;  global credit_sem_3;  global result_sem_3;  global attempt_sem_3
@@ -104,6 +109,7 @@ def generate_result():
 
     students_name.clear(),       students_roll_no.clear(),    student_enroloment_no.clear()
     students_father_name.clear(),students_mother_name.clear()
+    comment_final.clear()
     student_sem_1.clear(),credit_sem_1.clear(),result_sem_1.clear(),attempt_sem_1.clear()
     student_sem_2.clear(),credit_sem_2.clear(),result_sem_2.clear(),attempt_sem_2.clear()
     student_sem_3.clear(),credit_sem_3.clear(),result_sem_3.clear(),attempt_sem_3.clear()
@@ -142,6 +148,7 @@ def generate_result():
         student_enroloment_no.insert(i,wb_student_details.cell_value(i+4,3))
         students_father_name.insert(i,wb_student_details.cell_value(i+4,4))
         students_mother_name.insert(i,wb_student_details.cell_value(i+4,5))
+        comment_final.insert(i,wb_student_details.cell_value(i+4,46))
         # To insert data from xl sheet a complete coloum ,in a list
         value_current_sem=check_current_sem(current_sem)
         if value_current_sem >1:
@@ -298,6 +305,7 @@ def getGradeintocredit(cr,grade):
     else:
         return (0)
 def createpdfs():
+    global ent_date
     global wb_subject
     is_ATKT_fail = ''
     fail_credits=0
@@ -324,7 +332,7 @@ def createpdfs():
     wb.save(output_folder+"\\"+"student_detail_new.xls")
     #^relate with line number 654
     for student in students_name:
-        
+
         result_canvas.insert(result_index,Canvas(output_folder+"\\"+student_enroloment_no[result_index]+".pdf",pagesize=A4))
         result_canvas[result_index].setTitle(student)
 
@@ -343,194 +351,196 @@ def createpdfs():
         # result_canvas[result_index].setFont("Helvetica-Bold",14)
         # result_canvas[result_index].drawCentredString(295,710,stmy_grade)
         result_canvas[result_index].setFont("Helvetica-Bold",14)
-        result_canvas[result_index].drawCentredString(300,670,course_name+" "+branch_name)
+        result_canvas[result_index].drawCentredString(300,680,course_name+" "+branch_name)
         result_canvas[result_index].setFont("Helvetica-Bold",14)
-        result_canvas[result_index].drawCentredString(300,650,"SEMESTER"+"-"+current_sem.upper()+","+"BATCH"+" "+batch_year)
+        result_canvas[result_index].drawCentredString(300,660,"SEMESTER"+"-"+current_sem.upper()+","+"BATCH"+" "+batch_year)
         result_canvas[result_index].setFont("Helvetica",12)
-        result_canvas[result_index].drawString(350,635,"Month of Exam:"+" "+month_of_exam+" "+str(year_of_exam))
+        result_canvas[result_index].drawString(350,645,"Month of Exam:"+" "+month_of_exam+" "+str(year_of_exam))
         result_canvas[result_index].setFont("Helvetica",12)
-        result_canvas[result_index].drawString(40,615,"NAME"+"  :   "+str(student).title())
+        result_canvas[result_index].drawString(40,625,"NAME"+"  :   "+str(student).title())
         if len(students_father_name[result_index])>=30:
             result_canvas[result_index].setFont("Helvetica",12)
-            result_canvas[result_index].drawString(300,615,"FATHER'S NAME"+"  :   ")
+            result_canvas[result_index].drawString(300,625,"FATHER'S NAME"+"  :   ")
             result_canvas[result_index].setFont("Helvetica",10)
-            result_canvas[result_index].drawString(415,615,str(students_father_name[result_index]).title())
+            result_canvas[result_index].drawString(415,625,str(students_father_name[result_index]).title())
         else:
             result_canvas[result_index].setFont("Helvetica",12)
-            result_canvas[result_index].drawString(300,615,"FATHER'S NAME"+"  :   "+str(students_father_name[result_index]).title())
-        
+            result_canvas[result_index].drawString(300,625,"FATHER'S NAME"+"  :   "+str(students_father_name[result_index]).title())
+
         result_canvas[result_index].setFont("Helvetica",12)
-        result_canvas[result_index].drawString(40,575,"ROLL NO"+"  :   "+students_roll_no[result_index])
+        result_canvas[result_index].drawString(40,585,"ROLL NO"+"  :   "+students_roll_no[result_index])
         result_canvas[result_index].setFont("Helvetica",12)
         if len(students_mother_name[result_index])>=30:
 
-            result_canvas[result_index].drawString(300,595,"MOTHER'S NAME"+"  :   ")
+            result_canvas[result_index].drawString(300,605,"MOTHER'S NAME"+"  :   ")
             result_canvas[result_index].setFont("Helvetica",10)
-            result_canvas[result_index].drawString(415,595,str(students_mother_name[result_index]).title())
+            result_canvas[result_index].drawString(415,605,str(students_mother_name[result_index]).title())
         else:
             result_canvas[result_index].setFont("Helvetica",12)
-            result_canvas[result_index].drawString(300,595,"MOTHER'S NAME"+"  :   "+str(students_mother_name[result_index]).title())
+            result_canvas[result_index].drawString(300,605,"MOTHER'S NAME"+"  :   "+str(students_mother_name[result_index]).title())
 
         result_canvas[result_index].setFont("Helvetica",12)
-        result_canvas[result_index].drawString(300,575,"ENROLMENT NO."+"  :   "+student_enroloment_no[result_index])
+        result_canvas[result_index].drawString(300,585,"ENROLMENT NO."+"  :   "+student_enroloment_no[result_index])
         #sem
+        result_canvas[result_index].setFont("Helvetica-Bold",10)
+        result_canvas[result_index].drawString(270,240,str(comment_final[result_index]))
         result_canvas[result_index].setFont("Helvetica",12)
         result_canvas[result_index].setFont("Helvetica-Bold",10)
-        result_canvas[result_index].rect(40, 520, 520, 40, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 280, 60, 280, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 280, 335, 280, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 260, 395, 300, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 260, 465, 300, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 530, 520, 40, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 290, 60, 280, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 290, 335, 280, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 270, 395, 300, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 270, 465, 300, stroke=1, fill=0)
 
-        result_canvas[result_index].rect(40, 480, 520, 40, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 480, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 480, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 460, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 440, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 420, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 400, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 380, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 360, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 340, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 320, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 300, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 490, 520, 40, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 490, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 490, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 470, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 450, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 430, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 410, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 390, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 370, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 350, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 330, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 310, 520, 20, stroke=1, fill=0)
 
-        result_canvas[result_index].drawCentredString(70,545,"COURSE")
-        result_canvas[result_index].drawCentredString(70,530,"CODE")
-        result_canvas[result_index].drawCentredString(230,535,"SUBJECT NAME")
-        result_canvas[result_index].drawCentredString(405,545,"COURSE")
-        result_canvas[result_index].drawCentredString(405,530,"CREDITS")
-        result_canvas[result_index].drawCentredString(470,545,"GRADE")
-        result_canvas[result_index].drawCentredString(470,530,"OBTAINED")
-        result_canvas[result_index].drawCentredString(535,545,"GRADE ")
-        result_canvas[result_index].drawCentredString(535,535,"POINT")
-        result_canvas[result_index].drawCentredString(535,525,"CREDITS")
+        result_canvas[result_index].drawCentredString(70,555,"COURSE")
+        result_canvas[result_index].drawCentredString(70,540,"CODE")
+        result_canvas[result_index].drawCentredString(230,545,"SUBJECT NAME")
+        result_canvas[result_index].drawCentredString(405,555,"COURSE")
+        result_canvas[result_index].drawCentredString(405,540,"CREDITS")
+        result_canvas[result_index].drawCentredString(470,555,"GRADE")
+        result_canvas[result_index].drawCentredString(470,540,"OBTAINED")
+        result_canvas[result_index].drawCentredString(535,555,"GRADE ")
+        result_canvas[result_index].drawCentredString(535,545,"POINT")
+        result_canvas[result_index].drawCentredString(535,535,"CREDITS")
 
-        result_canvas[result_index].rect(40, 280, 520, 200, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 260, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 260, 335, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 220, 520, 40, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 290, 520, 200, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 270, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 270, 335, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 250, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].setFont("Helvetica-Bold",11)
-        result_canvas[result_index].drawCentredString(325,265,"TOTAL CREDITS")
+        result_canvas[result_index].drawCentredString(325,275,"TOTAL CREDITS")
         #
-        result_canvas[result_index].rect(40, 155, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 190, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].setFont("Helvetica-Bold",10)
-        result_canvas[result_index].drawCentredString(300,160,"RESULT SEMESTER-WISE")
-        result_canvas[result_index].rect(40, 55, 520, 100, stroke=1, fill=0)
+        result_canvas[result_index].drawCentredString(300,195,"RESULT SEMESTER-WISE")
+        result_canvas[result_index].rect(40, 90, 520, 100, stroke=1, fill=0)
         result_canvas[result_index].setFont("Helvetica-Bold",10)
-        result_canvas[result_index].drawCentredString(75,140,"SEMESTER")
+        result_canvas[result_index].drawCentredString(75,175,"SEMESTER")
 
-        result_canvas[result_index].rect(40, 135, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].rect(40, 170, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].setFont("Helvetica-Bold",10)
-        result_canvas[result_index].drawCentredString(70,120,"CREDITS")
-        result_canvas[result_index].rect(40, 115, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].drawCentredString(70,155,"CREDITS")
+        result_canvas[result_index].rect(40, 150, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].setFont("Helvetica-Bold",10)
-        result_canvas[result_index].drawCentredString(63,100,"SGPA")
-        result_canvas[result_index].rect(40, 95, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].drawCentredString(63,135,"SGPA")
+        result_canvas[result_index].rect(40, 130, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].setFont("Helvetica-Bold",10)
-        result_canvas[result_index].drawCentredString(73,80,"ATTEMPT")
-        result_canvas[result_index].rect(40, 75, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].drawCentredString(73,115,"ATTEMPT")
+        result_canvas[result_index].rect(40, 110, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].setFont("Helvetica-Bold",10)
-        result_canvas[result_index].drawCentredString(68,60,"RESULT")
-        result_canvas[result_index].rect(40, 55, 520, 20, stroke=1, fill=0)
+        result_canvas[result_index].drawCentredString(68,95,"RESULT")
+        result_canvas[result_index].rect(40, 90, 520, 20, stroke=1, fill=0)
         #@to check 5 years or 2 years
         course_branch = course_name+branch_name
         is_five = False
         if "iot" in course_branch.lower() or "internet of things" in course_branch.lower():
             is_five = True
-            result_canvas[result_index].rect(160, 55, 40,100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(175,140,"I")
-            result_canvas[result_index].rect(200, 55, 40, 100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(215,140,"II")
-            result_canvas[result_index].rect(240, 55, 40, 100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(255,140,"III")
-            result_canvas[result_index].rect(280, 55, 40, 100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(295,140,"IV")
-            result_canvas[result_index].rect(320, 55, 40, 100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(335,140,"V")
-            result_canvas[result_index].rect(360, 55, 40, 100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(375,140,"VI")
-            result_canvas[result_index].rect(400, 55, 40, 100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(415,140,"VII")
-            result_canvas[result_index].rect(440, 55, 40, 100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(455,140,"VIII")
-            result_canvas[result_index].rect(480, 55, 40, 100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(495,140,"IX")
-            result_canvas[result_index].drawCentredString(535,140,"X")
+            result_canvas[result_index].rect(160, 90, 40,100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(175,175,"I")
+            result_canvas[result_index].rect(200, 90, 40, 100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(215,175,"II")
+            result_canvas[result_index].rect(240, 90, 40, 100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(255,175,"III")
+            result_canvas[result_index].rect(280, 90, 40, 100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(295,175,"IV")
+            result_canvas[result_index].rect(320, 90, 40, 100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(335,175,"V")
+            result_canvas[result_index].rect(360, 90, 40, 100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(375,175,"VI")
+            result_canvas[result_index].rect(400, 90, 40, 100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(415,175,"VII")
+            result_canvas[result_index].rect(440, 90, 40, 100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(455,175,"VIII")
+            result_canvas[result_index].rect(480, 90, 40, 100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(495,175,"IX")
+            result_canvas[result_index].drawCentredString(535,175,"X")
         elif "executive" in course_branch.lower() or "instrumentation" in course_branch.lower():
-            result_canvas[result_index].rect(160, 55, 100,100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(210,140,"I")
-            result_canvas[result_index].rect(260, 55, 100,100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(310,140,"II")
-            result_canvas[result_index].rect(360, 55, 100,100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(410,140,"III")
-            result_canvas[result_index].rect(460, 55, 100,100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(510,140,"IV")
+            result_canvas[result_index].rect(160, 90, 100,100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(210,175,"I")
+            result_canvas[result_index].rect(260, 90, 100,100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(310,175,"II")
+            result_canvas[result_index].rect(360, 90, 100,100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(410,175,"III")
+            result_canvas[result_index].rect(460, 90, 100,100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(510,175,"IV")
         #logic for fetching data from xl for previous sem (exclude current sem)
         if check_current_sem(current_sem) >1:
             if is_five:
-                result_canvas[result_index].drawString(170,100,str(student_sem_1[result_index]))
-                result_canvas[result_index].drawString(170,120,str(int(credit_sem_1[result_index])))
-                result_canvas[result_index].drawString(170,60,str(result_sem_1[result_index]))
-                result_canvas[result_index].drawString(170,80,str(int(attempt_sem_1[result_index])))
+                result_canvas[result_index].drawString(170,135,str(student_sem_1[result_index]))
+                result_canvas[result_index].drawString(170,155,str(int(credit_sem_1[result_index])))
+                result_canvas[result_index].drawString(170,95,str(result_sem_1[result_index]))
+                result_canvas[result_index].drawString(170,115,str(int(attempt_sem_1[result_index])))
             else :
-                result_canvas[result_index].drawString(205,100,str(student_sem_1[result_index]))
-                result_canvas[result_index].drawString(205,120,str(int(credit_sem_1[result_index])))
-                result_canvas[result_index].drawString(205,60,str(result_sem_1[result_index]))
-                result_canvas[result_index].drawString(205,80,str(int(attempt_sem_1[result_index])))
+                result_canvas[result_index].drawString(205,135,str(student_sem_1[result_index]))
+                result_canvas[result_index].drawString(205,155,str(int(credit_sem_1[result_index])))
+                result_canvas[result_index].drawString(205,95,str(result_sem_1[result_index]))
+                result_canvas[result_index].drawString(205,115,str(int(attempt_sem_1[result_index])))
         if check_current_sem(current_sem) >2:
             if is_five:
-                result_canvas[result_index].drawString(210,100,str(student_sem_2[result_index]))
-                result_canvas[result_index].drawString(210,120,str(int(credit_sem_2[result_index])))
-                result_canvas[result_index].drawString(210,60,str(result_sem_2[result_index]))
-                result_canvas[result_index].drawString(210,80,str(int(attempt_sem_2[result_index])))
+                result_canvas[result_index].drawString(210,135,str(student_sem_2[result_index]))
+                result_canvas[result_index].drawString(210,155,str(int(credit_sem_2[result_index])))
+                result_canvas[result_index].drawString(210,95,str(result_sem_2[result_index]))
+                result_canvas[result_index].drawString(210,115,str(int(attempt_sem_2[result_index])))
             else:
-                result_canvas[result_index].drawString(305,100,str(student_sem_2[result_index]))
-                result_canvas[result_index].drawString(305,120,str(int(credit_sem_2[result_index])))
-                result_canvas[result_index].drawString(305,60,str(result_sem_2[result_index]))
-                result_canvas[result_index].drawString(305,80,str(int(attempt_sem_2[result_index])))
+                result_canvas[result_index].drawString(305,135,str(student_sem_2[result_index]))
+                result_canvas[result_index].drawString(305,155,str(int(credit_sem_2[result_index])))
+                result_canvas[result_index].drawString(305,95,str(result_sem_2[result_index]))
+                result_canvas[result_index].drawString(305,115,str(int(attempt_sem_2[result_index])))
         if check_current_sem(current_sem) >3:
             if is_five:
-                result_canvas[result_index].drawString(250,100,str(student_sem_3[result_index]))
-                result_canvas[result_index].drawString(250,120,str(int(credit_sem_3[result_index])))
-                result_canvas[result_index].drawString(250,60,str(result_sem_3[result_index]))
-                result_canvas[result_index].drawString(250,80,str(int(attempt_sem_3[result_index])))
+                result_canvas[result_index].drawString(250,135,str(student_sem_3[result_index]))
+                result_canvas[result_index].drawString(250,155,str(int(credit_sem_3[result_index])))
+                result_canvas[result_index].drawString(250,95,str(result_sem_3[result_index]))
+                result_canvas[result_index].drawString(250,115,str(int(attempt_sem_3[result_index])))
             else:
-                result_canvas[result_index].drawString(405,100,str(student_sem_3[result_index]))
-                result_canvas[result_index].drawString(405,120,str(int(credit_sem_3[result_index])))
-                result_canvas[result_index].drawString(405,60,str(result_sem_3[result_index]))
-                result_canvas[result_index].drawString(405,80,str(int(attempt_sem_3[result_index])))
+                result_canvas[result_index].drawString(405,135,str(student_sem_3[result_index]))
+                result_canvas[result_index].drawString(405,155,str(int(credit_sem_3[result_index])))
+                result_canvas[result_index].drawString(405,95,str(result_sem_3[result_index]))
+                result_canvas[result_index].drawString(405,115,str(int(attempt_sem_3[result_index])))
         if check_current_sem(current_sem) >4:
-            result_canvas[result_index].drawString(290,100,str(student_sem_4[result_index]))
-            result_canvas[result_index].drawString(290,120,str(int(credit_sem_4[result_index])))
-            result_canvas[result_index].drawString(290,60,str(result_sem_4[result_index]))
-            result_canvas[result_index].drawString(290,80,str(int(attempt_sem_4[result_index])))
+            result_canvas[result_index].drawString(290,135,str(student_sem_4[result_index]))
+            result_canvas[result_index].drawString(290,155,str(int(credit_sem_4[result_index])))
+            result_canvas[result_index].drawString(290,95,str(result_sem_4[result_index]))
+            result_canvas[result_index].drawString(290,115,str(int(attempt_sem_4[result_index])))
         if check_current_sem(current_sem) >5:
-            result_canvas[result_index].drawString(330,100,str(student_sem_5[result_index]))
-            result_canvas[result_index].drawString(330,120,str(int(credit_sem_5[result_index])))
-            result_canvas[result_index].drawString(330,60,str(result_sem_5[result_index]))
-            result_canvas[result_index].drawString(330,80,str(int(attempt_sem_5[result_index])))
+            result_canvas[result_index].drawString(330,135,str(student_sem_5[result_index]))
+            result_canvas[result_index].drawString(330,155,str(int(credit_sem_5[result_index])))
+            result_canvas[result_index].drawString(330,95,str(result_sem_5[result_index]))
+            result_canvas[result_index].drawString(330,115,str(int(attempt_sem_5[result_index])))
         if check_current_sem(current_sem) >6:
-            result_canvas[result_index].drawString(370,100,str(student_sem_6[result_index]))
-            result_canvas[result_index].drawString(370,120,str(int(credit_sem_6[result_index])))
-            result_canvas[result_index].drawString(370,60,str(result_sem_6[result_index]))
-            result_canvas[result_index].drawString(370,80,str(int(attempt_sem_6[result_index])))
+            result_canvas[result_index].drawString(370,135,str(student_sem_6[result_index]))
+            result_canvas[result_index].drawString(370,155,str(int(credit_sem_6[result_index])))
+            result_canvas[result_index].drawString(370,95,str(result_sem_6[result_index]))
+            result_canvas[result_index].drawString(370,115,str(int(attempt_sem_6[result_index])))
         if check_current_sem(current_sem) >7:
-            result_canvas[result_index].drawString(410,100,str(student_sem_7[result_index]))
-            result_canvas[result_index].drawString(410,120,str(int(credit_sem_7[result_index])))
-            result_canvas[result_index].drawString(410,60,str(result_sem_7[result_index]))
-            result_canvas[result_index].drawString(410,80,str(int(attempt_sem_7[result_index])))
+            result_canvas[result_index].drawString(410,135,str(student_sem_7[result_index]))
+            result_canvas[result_index].drawString(410,155,str(int(credit_sem_7[result_index])))
+            result_canvas[result_index].drawString(410,95,str(result_sem_7[result_index]))
+            result_canvas[result_index].drawString(410,115,str(int(attempt_sem_7[result_index])))
         if check_current_sem(current_sem) >8:
-            result_canvas[result_index].drawString(450,100,str(student_sem_8[result_index]))
-            result_canvas[result_index].drawString(450,120,str(int(credit_sem_8[result_index])))
-            result_canvas[result_index].drawString(450,60,str(result_sem_8[result_index]))
-            result_canvas[result_index].drawString(450,80,str(int(attempt_sem_8[result_index])))
+            result_canvas[result_index].drawString(450,135,str(student_sem_8[result_index]))
+            result_canvas[result_index].drawString(450,155,str(int(credit_sem_8[result_index])))
+            result_canvas[result_index].drawString(450,95,str(result_sem_8[result_index]))
+            result_canvas[result_index].drawString(450,115,str(int(attempt_sem_8[result_index])))
         if check_current_sem(current_sem) >9:
-            result_canvas[result_index].drawString(490,100,str(student_sem_9[result_index]))
-            result_canvas[result_index].drawString(490,120,str(int(credit_sem_9[result_index])))
-            result_canvas[result_index].drawString(490,60,str(result_sem_9[result_index]))
-            result_canvas[result_index].drawString(490,80,str(int(attempt_sem_9[result_index])))
-        #
+            result_canvas[result_index].drawString(490,135,str(student_sem_9[result_index]))
+            result_canvas[result_index].drawString(490,155,str(int(credit_sem_9[result_index])))
+            result_canvas[result_index].drawString(490,95,str(result_sem_9[result_index]))
+            result_canvas[result_index].drawString(490,115,str(int(attempt_sem_9[result_index])))
+
         result_index = result_index + 1
     result_index = 0
     #to set co-ordinates to write(edit) sgpa in xl sheet
@@ -562,30 +572,30 @@ def createpdfs():
         fail_credits = 0
         result_canvas[result_index].setFont("Helvetica",11)
         start_x = 70
-        start_y = 505
+        start_y = 515
         for sub_code in subject_code:
             #print(sub_code)
             result_canvas[result_index].drawCentredString(start_x,start_y,sub_code)
             start_y = start_y-20
 
         start_x = 105
-        start_y = 505
+        start_y = 515
         for subj in subject_name:
             #print(sub_name)
             result_canvas[result_index].drawString(start_x,start_y,subj)
             start_y = start_y-20
 
         start_x = 405
-        start_y = 505
+        start_y = 515
         for credit in course_credits:
             result_canvas[result_index].drawString(start_x,start_y,str(int(credit)))
             start_y = start_y-20
 
         result_canvas[result_index].setFont("Helvetica",12)
-        result_canvas[result_index].drawCentredString(405,265,str(int(sum(course_credits))))
+        result_canvas[result_index].drawCentredString(405,275,str(int(sum(course_credits))))
 
         start_x = 470
-        start_y = 505
+        start_y = 515
         for i in range(sub_count):
             result_canvas[result_index].drawString(start_x,start_y,(subjects_grades[i][result_index]))
             if 'F' in subjects_grades[i][result_index]:
@@ -596,10 +606,10 @@ def createpdfs():
             is_ATKT_fail = "FAIL"
             #else:
             #    is_ATKT_fail = "PASS"
-            
+
 
         start_x = 525
-        start_y = 505
+        start_y = 515
         grade_credit_sum = 0
         for i in range(sub_count):
             grade_credit = getGradeintocredit(course_credits[i],subjects_grades[i][result_index])
@@ -608,13 +618,13 @@ def createpdfs():
             start_y = start_y-20
 
         result_canvas[result_index].setFont("Helvetica",12)
-        result_canvas[result_index].drawCentredString(535,265,str(int(grade_credit_sum)))
+        result_canvas[result_index].drawCentredString(535,275,str(int(grade_credit_sum)))
 
         sem_grade_avg = grade_credit_sum/sum(course_credits)
-        result_canvas[result_index].drawString(50,235,"Semester Grade Point Average(SGPA) = "+str(round(sem_grade_avg,3)))
+        result_canvas[result_index].drawString(50,255,"Semester Grade Point Average(SGPA) = "+str(round(sem_grade_avg,3)))
         # FOR ATKT/BACKLOG
         #
-       
+
         #
         #LIST FOR PRINTING SGPA AND CREDITS OF CURRENT SEM at pdf
         if is_five:
@@ -622,25 +632,29 @@ def createpdfs():
         else:
             co_ordinate = [0,205,305,405,390,430,470,510,550,590,630]
         result_canvas[result_index].setFont("Helvetica-Bold",10)
-        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],100,str(round(sem_grade_avg,3)))
+        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],135,str(round(sem_grade_avg,3)))
         sem_grade_avg_list.append(round(sem_grade_avg,3))
         overall_result.append(is_ATKT_fail)
         #credits
-        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],60,str(is_ATKT_fail))
+        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],95,str(is_ATKT_fail))
         #if "PASS" in is_ATKT_fail.upper():
-        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],80,str(1))
-        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],120,str(int(sum(course_credits))))
+        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],115,str(1))
+        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],155,str(int(sum(course_credits))))
 
         today = date.today()
-        data_of_issue = today.strftime("%B %d, %Y")
-        result_canvas[result_index].drawString(50,200,"*Grade in repeated Examination")
-        result_canvas[result_index].drawString(50,40,"DATE OF RESULT: "+data_of_issue)
+        data_of_issue = today.strftime("%d %B %Y")
+        if (ent_date != ""):
+            data_of_issue = ent_date
 
-        result_canvas[result_index].drawString(470,20,"HEAD")
+        print(data_of_issue)
+        result_canvas[result_index].drawString(50,240,"*Grade in repeated Examination")
+        result_canvas[result_index].drawString(50,75,"DATE OF RESULT: "+data_of_issue)
+
+        result_canvas[result_index].drawString(470,55,"HEAD")
         result_canvas[result_index].save()
         result_index = result_index + 1
         #writing in student_detail_file (XL)
-        
+
         rd1 =xlrd.open_workbook(output_folder+"\\"+"student_detail_new.xls")
         wb1= copy(rd1)
         w_sheet = wb1.get_sheet(0)
@@ -656,7 +670,7 @@ def createpdfs():
     creat_master_xlsheet()
 def creat_master_xlsheet():
     wrte = xlwt.Workbook()
-    ws =wrte.add_sheet("master_sheet") 
+    ws =wrte.add_sheet("master_sheet")
     ws.write(1,0,"Sr No."),ws.write(1,1,"Student Name"),ws.write(1,2,"Roll Number"),ws.write(2,3,"Credits :-"),ws.write(1,3,"Enrolment Number")
     current_colum = 3
     for sub in subject_name:
@@ -797,6 +811,13 @@ tool = tk.Label(root, text="PDF Generator Software",
                 fg="black", font="Verdana 16")
 note = tk.Label(
     root, text="Note : Please select the excel files of subject results and student_info and click on generate results.", font=verdana_12)
+#--------------------------------
+today1 = date.today()
+curr_date = today1.strftime("%d %B %Y")
+date_text = tk.Entry(font=verdana_10)
+date_sel = tk.Label(root, text='DATE  \n'+f"{curr_date}",
+                fg="black", font="Verdana 10")
+
 # __________________________________________________________________________________________________________________________________________
 student_info = tk.Label(root, text="Students Info :", font=verdana_10)
 student_info_select = tk.Label(
@@ -887,6 +908,10 @@ department.grid(row=0, column=0, columnspan=3)
 tool.grid(row=1, column=0, columnspan=3)
 note.grid(row=2, column=0, columnspan=3,padx=20,pady=20)
 
+date_text.grid(row=17,column=2,columnspan=2,pady=5)
+date_sel.grid(row=16,column=2,columnspan=2,pady=5)
+
+
 student_info.grid(row=3, column=0, sticky=W,padx=20)
 student_info_select.grid(row=3, column=1)
 button_explore.grid(row=3, column=2)
@@ -943,4 +968,3 @@ gen_result.grid(row=16,column=0,columnspan=3,pady=10)
 sys_msg.grid(row=17,column=0,columnspan=3,pady=10)
 # calling the mainloop
 root.mainloop()
-
