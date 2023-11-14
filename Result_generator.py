@@ -1,23 +1,15 @@
-'''
-This is an application to generate results of students.
-'''
 import statistics
 import xlrd
 import xlwt
 from xlutils.copy import copy
-# import the libraries
 import tkinter as tk
-# import filedialog module
 from tkinter import filedialog
 from tkinter.ttk import *
 from tkinter import *
 from reportlab.pdfgen.canvas import Canvas
-#from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter, A4
-#from reportlab.platypus import Table
-#from reportlab.pdfgen.
 from datetime import date
-#import os
+from webbrowser import open
 
 select_subject = "Select Subject result File"
 verdana_12 = "Verdana 12"
@@ -73,6 +65,8 @@ sub_count =0
 no_of_students = 0
 sem_grade_avg = 0
 #@
+def help():
+    open("https://github.com/ArpitMourya/Result_generator")
 def generate_result():
     global ent_date
     ent_date = date_text.get()
@@ -120,128 +114,132 @@ def generate_result():
     student_sem_8.clear(),credit_sem_8.clear(),result_sem_8.clear(),attempt_sem_8.clear()
     student_sem_9.clear(),credit_sem_9.clear(),result_sem_9.clear(),attempt_sem_9.clear()
     student_sem_10.clear(),credit_sem_10.clear(),result_sem_10.clear(),attempt_sem_10.clear()
-    output_folder = filedialog.askdirectory()
-    n = 0
-    # to get the data from excel sheets and generate the results
-    wb_student_details = xlrd.open_workbook(students_detail_wb).sheet_by_index(0)
-    #print(wb_student_details.nrows)
-    count = 0
-    for row in range(wb_student_details.nrows):
-        cell_value = wb_student_details.cell_value(row,0)
-        if cell_value != '':
-            count += 1
-    #@ Number of student will be equal to number of rowes in xl sheet - 4
-    no_of_students = count-4
-    #@
-    course_name = wb_student_details.cell_value(0,1)
-    branch_name = wb_student_details.cell_value(1,1)
-    batch_year = wb_student_details.cell_value(2,1)
-    # file locations consists location of subject marks
-    # fetch some one time fields which is going to be same for all
-    current_sem = xlrd.open_workbook(file_locations[0]).sheet_by_index(0).cell_value(3,3)
-    month_of_exam = xlrd.open_workbook(file_locations[0]).sheet_by_index(0).cell_value(4,3)
-    year_of_exam = int(xlrd.open_workbook(file_locations[0]).sheet_by_index(0).cell_value(5,3))
+    try:
+        output_folder = filedialog.askdirectory()
+        n = 0
+        # to get the data from excel sheets and generate the results
+        wb_student_details = xlrd.open_workbook(students_detail_wb).sheet_by_index(0)
+        #print(wb_student_details.nrows)
+        count = 0
+        for row in range(wb_student_details.nrows):
+            cell_value = wb_student_details.cell_value(row,0)
+            if cell_value != '':
+                count += 1
+        #@ Number of student will be equal to number of rowes in xl sheet - 4
+        no_of_students = count-4
+        #@
+        course_name = wb_student_details.cell_value(0,1)
+        branch_name = wb_student_details.cell_value(1,1)
+        batch_year = wb_student_details.cell_value(2,1)
+        # file locations consists location of subject marks
+        # fetch some one time fields which is going to be same for all
+        current_sem = xlrd.open_workbook(file_locations[0]).sheet_by_index(0).cell_value(3,3)
+        month_of_exam = xlrd.open_workbook(file_locations[0]).sheet_by_index(0).cell_value(4,3)
+        year_of_exam = int(xlrd.open_workbook(file_locations[0]).sheet_by_index(0).cell_value(5,3))
 
-    for i in range (count-4):
-        students_name.insert(i,wb_student_details.cell_value(i+4,1))
-        students_roll_no.insert(i,wb_student_details.cell_value(i+4,2))
-        student_enroloment_no.insert(i,wb_student_details.cell_value(i+4,3))
-        students_father_name.insert(i,wb_student_details.cell_value(i+4,4))
-        students_mother_name.insert(i,wb_student_details.cell_value(i+4,5))
-        comment_final.insert(i,wb_student_details.cell_value(i+4,46))
-        # To insert data from xl sheet a complete coloum ,in a list
-        value_current_sem=check_current_sem(current_sem)
-        if value_current_sem >1:
-            student_sem_1.insert(i,wb_student_details.cell_value(i+4,6))
-            credit_sem_1.insert(i,wb_student_details.cell_value(i+4,16))
-            result_sem_1.insert(i,wb_student_details.cell_value(i+4,26))
-            attempt_sem_1.insert(i,wb_student_details.cell_value(i+4,36))
-        if value_current_sem >2:
-            student_sem_2.insert(i,wb_student_details.cell_value(i+4,7))
-            credit_sem_2.insert(i,wb_student_details.cell_value(i+4,17))
-            result_sem_2.insert(i,wb_student_details.cell_value(i+4,27))
-            attempt_sem_2.insert(i,wb_student_details.cell_value(i+4,37))
-        if value_current_sem >3:
-            student_sem_3.insert(i,wb_student_details.cell_value(i+4,8))
-            credit_sem_3.insert(i,wb_student_details.cell_value(i+4,18))
-            result_sem_3.insert(i,wb_student_details.cell_value(i+4,28))
-            attempt_sem_3.insert(i,wb_student_details.cell_value(i+4,38))
-        if value_current_sem >4:
-            student_sem_4.insert(i,wb_student_details.cell_value(i+4,9))
-            credit_sem_4.insert(i,wb_student_details.cell_value(i+4,19))
-            result_sem_4.insert(i,wb_student_details.cell_value(i+4,29))
-            attempt_sem_4.insert(i,wb_student_details.cell_value(i+4,39))
-        if value_current_sem >5:
-            student_sem_5.insert(i,wb_student_details.cell_value(i+4,10))
-            credit_sem_5.insert(i,wb_student_details.cell_value(i+4,20))
-            result_sem_5.insert(i,wb_student_details.cell_value(i+4,30))
-            attempt_sem_5.insert(i,wb_student_details.cell_value(i+4,40))
-        if value_current_sem >6:
-            student_sem_6.insert(i,wb_student_details.cell_value(i+4,11))
-            credit_sem_6.insert(i,wb_student_details.cell_value(i+4,21))
-            result_sem_6.insert(i,wb_student_details.cell_value(i+4,31))
-            attempt_sem_6.insert(i,wb_student_details.cell_value(i+4,41))
-        if value_current_sem >7:
-            student_sem_7.insert(i,wb_student_details.cell_value(i+4,12))
-            credit_sem_7.insert(i,wb_student_details.cell_value(i+4,22))
-            result_sem_7.insert(i,wb_student_details.cell_value(i+4,32))
-            attempt_sem_7.insert(i,wb_student_details.cell_value(i+4,42))
-        if value_current_sem >8:
-            student_sem_8.insert(i,wb_student_details.cell_value(i+4,13))
-            credit_sem_8.insert(i,wb_student_details.cell_value(i+4,23))
-            result_sem_8.insert(i,wb_student_details.cell_value(i+4,33))
-            attempt_sem_8.insert(i,wb_student_details.cell_value(i+4,43))
-        if value_current_sem >9:
-            student_sem_9.insert(i,wb_student_details.cell_value(i+4,14))
-            credit_sem_9.insert(i,wb_student_details.cell_value(i+4,24))
-            result_sem_9.insert(i,wb_student_details.cell_value(i+4,34))
-            attempt_sem_9.insert(i,wb_student_details.cell_value(i+4,44))
-        if value_current_sem >10:
-            student_sem_10.insert(i,wb_student_details.cell_value(i+4,15))
-            credit_sem_10.insert(i,wb_student_details.cell_value(i+4,25))
-            result_sem_10.insert(i,wb_student_details.cell_value(i+4,35))
-            attempt_sem_10.insert(i,wb_student_details.cell_value(i+4,45))
-    #print(f"students_name{len(students_name)}")
-    #print(f"students_roll_no{len(students_roll_no)}")
-    #print(f"student_enroloment_no{len(student_enroloment_no)}")
-    #print(f"students_father_name{len(students_father_name)}")
-    #print(f"students_mother_name{len(students_mother_name)}")
-    mod2 = [len(students_name),len(students_father_name),len(students_roll_no),len(student_enroloment_no),len(students_mother_name)]
-    #if len(students_name)==len(students_father_name)==len(students_roll_no)==len(student_enroloment_no)==len(students_mother_name):
-    stud_count = statistics.mode(mod2)
-        #SEM
-    for location in range(0,no_of_files):
-        wb_subject.insert(n,xlrd.open_workbook(file_locations[n]).sheet_by_index(0))
-        # print(wb_subject)
-        # Logic for fetching data from and creating pdf
-        # fetch the data
-        subject_code.insert(n,wb_subject[n].cell_value(0,3))
-        subject_name.insert(n,wb_subject[n].cell_value(1,3))
-        course_credits.insert(n,wb_subject[n].cell_value(2,3))
-        #stud_count = 0
-        #for row in range(wb_subject[n].nrows):
-        #    cell_value = wb_subject[n].cell_value(row-1,1)
-        #    if cell_value != '':
-        #        stud_count += 1
-        # print("student count")
-        grade = []
-        for k in range(stud_count):
-            grade.append(determine_grade(wb_subject[n].cell_value(k+8,9)))
-            #print(f"{n} , { k} \n")
-            #print(grade)
-        subjects_grades.append(grade)
-        n = n+1
-    print(f"wb_subject {len(wb_subject)}")
-    print(f"subject_code {len(subject_code)}")
-    print(f"subject_name {len(subject_name)}")
-    print(f"course_credits {len(course_credits)}")
-    mod = [len(wb_subject),len(subject_code),len(subject_name),len(course_credits)]
-    sub_count = statistics.mode(mod)
-    print("student_count ",stud_count,end="\n\n")
-    print(mod)
-    #print(subjects_grades)
-    createpdfs()
-    sys_msg.configure(text="Results generated Successfully.", font=verdana_10)
+        for i in range (count-4):
+            students_name.insert(i,wb_student_details.cell_value(i+4,1))
+            students_roll_no.insert(i,wb_student_details.cell_value(i+4,2))
+            student_enroloment_no.insert(i,wb_student_details.cell_value(i+4,3))
+            students_father_name.insert(i,wb_student_details.cell_value(i+4,4))
+            students_mother_name.insert(i,wb_student_details.cell_value(i+4,5))
+            comment_final.insert(i,wb_student_details.cell_value(i+4,46))
+            # To insert data from xl sheet a complete coloum ,in a list
+            value_current_sem=check_current_sem(current_sem)
+            if value_current_sem >1:
+                student_sem_1.insert(i,wb_student_details.cell_value(i+4,6))
+                credit_sem_1.insert(i,wb_student_details.cell_value(i+4,16))
+                result_sem_1.insert(i,wb_student_details.cell_value(i+4,26))
+                attempt_sem_1.insert(i,wb_student_details.cell_value(i+4,36))
+            if value_current_sem >2:
+                student_sem_2.insert(i,wb_student_details.cell_value(i+4,7))
+                credit_sem_2.insert(i,wb_student_details.cell_value(i+4,17))
+                result_sem_2.insert(i,wb_student_details.cell_value(i+4,27))
+                attempt_sem_2.insert(i,wb_student_details.cell_value(i+4,37))
+            if value_current_sem >3:
+                student_sem_3.insert(i,wb_student_details.cell_value(i+4,8))
+                credit_sem_3.insert(i,wb_student_details.cell_value(i+4,18))
+                result_sem_3.insert(i,wb_student_details.cell_value(i+4,28))
+                attempt_sem_3.insert(i,wb_student_details.cell_value(i+4,38))
+            if value_current_sem >4:
+                student_sem_4.insert(i,wb_student_details.cell_value(i+4,9))
+                credit_sem_4.insert(i,wb_student_details.cell_value(i+4,19))
+                result_sem_4.insert(i,wb_student_details.cell_value(i+4,29))
+                attempt_sem_4.insert(i,wb_student_details.cell_value(i+4,39))
+            if value_current_sem >5:
+                student_sem_5.insert(i,wb_student_details.cell_value(i+4,10))
+                credit_sem_5.insert(i,wb_student_details.cell_value(i+4,20))
+                result_sem_5.insert(i,wb_student_details.cell_value(i+4,30))
+                attempt_sem_5.insert(i,wb_student_details.cell_value(i+4,40))
+            if value_current_sem >6:
+                student_sem_6.insert(i,wb_student_details.cell_value(i+4,11))
+                credit_sem_6.insert(i,wb_student_details.cell_value(i+4,21))
+                result_sem_6.insert(i,wb_student_details.cell_value(i+4,31))
+                attempt_sem_6.insert(i,wb_student_details.cell_value(i+4,41))
+            if value_current_sem >7:
+                student_sem_7.insert(i,wb_student_details.cell_value(i+4,12))
+                credit_sem_7.insert(i,wb_student_details.cell_value(i+4,22))
+                result_sem_7.insert(i,wb_student_details.cell_value(i+4,32))
+                attempt_sem_7.insert(i,wb_student_details.cell_value(i+4,42))
+            if value_current_sem >8:
+                student_sem_8.insert(i,wb_student_details.cell_value(i+4,13))
+                credit_sem_8.insert(i,wb_student_details.cell_value(i+4,23))
+                result_sem_8.insert(i,wb_student_details.cell_value(i+4,33))
+                attempt_sem_8.insert(i,wb_student_details.cell_value(i+4,43))
+            if value_current_sem >9:
+                student_sem_9.insert(i,wb_student_details.cell_value(i+4,14))
+                credit_sem_9.insert(i,wb_student_details.cell_value(i+4,24))
+                result_sem_9.insert(i,wb_student_details.cell_value(i+4,34))
+                attempt_sem_9.insert(i,wb_student_details.cell_value(i+4,44))
+            if value_current_sem >10:
+                student_sem_10.insert(i,wb_student_details.cell_value(i+4,15))
+                credit_sem_10.insert(i,wb_student_details.cell_value(i+4,25))
+                result_sem_10.insert(i,wb_student_details.cell_value(i+4,35))
+                attempt_sem_10.insert(i,wb_student_details.cell_value(i+4,45))
+        #print(f"students_name{len(students_name)}")
+        #print(f"students_roll_no{len(students_roll_no)}")
+        #print(f"student_enroloment_no{len(student_enroloment_no)}")
+        #print(f"students_father_name{len(students_father_name)}")
+        #print(f"students_mother_name{len(students_mother_name)}")
+        mod2 = [len(students_name),len(students_father_name),len(students_roll_no),len(student_enroloment_no),len(students_mother_name)]
+        #if len(students_name)==len(students_father_name)==len(students_roll_no)==len(student_enroloment_no)==len(students_mother_name):
+        stud_count = statistics.mode(mod2)
+            #SEM
+        for location in range(0,no_of_files):
+            wb_subject.insert(n,xlrd.open_workbook(file_locations[n]).sheet_by_index(0))
+            # print(wb_subject)
+            # Logic for fetching data from and creating pdf
+            # fetch the data
+            subject_code.insert(n,wb_subject[n].cell_value(0,3))
+            subject_name.insert(n,wb_subject[n].cell_value(1,3))
+            course_credits.insert(n,wb_subject[n].cell_value(2,3))
+            #stud_count = 0
+            #for row in range(wb_subject[n].nrows):
+            #    cell_value = wb_subject[n].cell_value(row-1,1)
+            #    if cell_value != '':
+            #        stud_count += 1
+            # print("student count")
+            grade = []
+            for k in range(stud_count):
+                grade.append(determine_grade(wb_subject[n].cell_value(k+8,9)))
+                #print(f"{n} , { k} \n")
+                #print(grade)
+            subjects_grades.append(grade)
+            n = n+1
+        print(f"wb_subject {len(wb_subject)}")
+        print(f"subject_code {len(subject_code)}")
+        print(f"subject_name {len(subject_name)}")
+        print(f"course_credits {len(course_credits)}")
+        mod = [len(wb_subject),len(subject_code),len(subject_name),len(course_credits)]
+        sub_count = statistics.mode(mod)
+        print("student_count ",stud_count,end="\n\n")
+        print(mod)
+        #print(subjects_grades)
+        createpdfs()
+        sys_msg.configure(text="Results generated Successfully.", font=verdana_10)
+    except Exception as e:
+        sys_msg.configure(text=f"ERROR:- {e}", font=verdana_10)
+        print(e)
 
 def determine_grade(marks):
     if marks >= 90 and marks <=100:
@@ -901,6 +899,8 @@ subject_12_explore = tk.Button(root, text=select_file,
 
 gen_result = tk.Button(root, text="Generate Results",font=verdana_12,
                                command=generate_result)
+get_help = tk.Button(root, text="Help",font=verdana_10,
+                               command=help)
 sys_msg = tk.Label(root, text="Click on 'Generate Results' to get result in PDF format.", font=verdana_10)
 
 # pack the widgets
@@ -965,6 +965,7 @@ subject_12_select.grid(row=15, column=1)
 subject_12_explore.grid(row=15, column=2)
 
 gen_result.grid(row=16,column=0,columnspan=3,pady=10)
+get_help.grid(row=17,column=0,columnspan=1,pady=11)
 sys_msg.grid(row=17,column=0,columnspan=3,pady=10)
 # calling the mainloop
 root.mainloop()
