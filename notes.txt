@@ -1,0 +1,6 @@
+fail credits 12 me ATKT hai ,
+Hit and Trial Modify layout of Marksheet, but can automate using AI tools.
+
+Fill with every semester : like  1 2 3 .. till particular semester.
+
+for 10th semester reduce the line of subject-grade tables . and design the new table .
