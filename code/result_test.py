@@ -147,52 +147,52 @@ def generate_result():
             # To insert data from xl sheet a complete coloum ,in a list
             value_current_sem=check_current_sem(current_sem)
             if value_current_sem >1:
-                student_sem_1.insert(i,wb_student_details.cell_value(i+4,6))
+                student_sem_1.insert(i,round(wb_student_details.cell_value(i+4,6),2))
                 credit_sem_1.insert(i,wb_student_details.cell_value(i+4,16))
                 result_sem_1.insert(i,wb_student_details.cell_value(i+4,26))
                 attempt_sem_1.insert(i,wb_student_details.cell_value(i+4,36))
             if value_current_sem >2:
-                student_sem_2.insert(i,wb_student_details.cell_value(i+4,7))
+                student_sem_2.insert(i,round(wb_student_details.cell_value(i+4,7),2))
                 credit_sem_2.insert(i,wb_student_details.cell_value(i+4,17))
                 result_sem_2.insert(i,wb_student_details.cell_value(i+4,27))
                 attempt_sem_2.insert(i,wb_student_details.cell_value(i+4,37))
             if value_current_sem >3:
-                student_sem_3.insert(i,wb_student_details.cell_value(i+4,8))
+                student_sem_3.insert(i,round(wb_student_details.cell_value(i+4,8),2))
                 credit_sem_3.insert(i,wb_student_details.cell_value(i+4,18))
                 result_sem_3.insert(i,wb_student_details.cell_value(i+4,28))
                 attempt_sem_3.insert(i,wb_student_details.cell_value(i+4,38))
             if value_current_sem >4:
-                student_sem_4.insert(i,wb_student_details.cell_value(i+4,9))
+                student_sem_4.insert(i,round(wb_student_details.cell_value(i+4,9),2))
                 credit_sem_4.insert(i,wb_student_details.cell_value(i+4,19))
                 result_sem_4.insert(i,wb_student_details.cell_value(i+4,29))
                 attempt_sem_4.insert(i,wb_student_details.cell_value(i+4,39))
             if value_current_sem >5:
-                student_sem_5.insert(i,wb_student_details.cell_value(i+4,10))
+                student_sem_5.insert(i,round(wb_student_details.cell_value(i+4,10),2))
                 credit_sem_5.insert(i,wb_student_details.cell_value(i+4,20))
                 result_sem_5.insert(i,wb_student_details.cell_value(i+4,30))
                 attempt_sem_5.insert(i,wb_student_details.cell_value(i+4,40))
             if value_current_sem >6:
-                student_sem_6.insert(i,wb_student_details.cell_value(i+4,11))
+                student_sem_6.insert(i,round(wb_student_details.cell_value(i+4,11),2))
                 credit_sem_6.insert(i,wb_student_details.cell_value(i+4,21))
                 result_sem_6.insert(i,wb_student_details.cell_value(i+4,31))
                 attempt_sem_6.insert(i,wb_student_details.cell_value(i+4,41))
             if value_current_sem >7:
-                student_sem_7.insert(i,wb_student_details.cell_value(i+4,12))
+                student_sem_7.insert(i,round(wb_student_details.cell_value(i+4,12),2))
                 credit_sem_7.insert(i,wb_student_details.cell_value(i+4,22))
                 result_sem_7.insert(i,wb_student_details.cell_value(i+4,32))
                 attempt_sem_7.insert(i,wb_student_details.cell_value(i+4,42))
             if value_current_sem >8:
-                student_sem_8.insert(i,wb_student_details.cell_value(i+4,13))
+                student_sem_8.insert(i,round(wb_student_details.cell_value(i+4,13),2))
                 credit_sem_8.insert(i,wb_student_details.cell_value(i+4,23))
                 result_sem_8.insert(i,wb_student_details.cell_value(i+4,33))
                 attempt_sem_8.insert(i,wb_student_details.cell_value(i+4,43))
             if value_current_sem >9:
-                student_sem_9.insert(i,wb_student_details.cell_value(i+4,14))
+                student_sem_9.insert(i,round(wb_student_details.cell_value(i+4,14),2))
                 credit_sem_9.insert(i,wb_student_details.cell_value(i+4,24))
                 result_sem_9.insert(i,wb_student_details.cell_value(i+4,34))
                 attempt_sem_9.insert(i,wb_student_details.cell_value(i+4,44))
             if value_current_sem >10:
-                student_sem_10.insert(i,wb_student_details.cell_value(i+4,15))
+                student_sem_10.insert(i,round(wb_student_details.cell_value(i+4,15),2))
                 credit_sem_10.insert(i,wb_student_details.cell_value(i+4,25))
                 result_sem_10.insert(i,wb_student_details.cell_value(i+4,35))
                 attempt_sem_10.insert(i,wb_student_details.cell_value(i+4,45))
@@ -390,7 +390,7 @@ def createpdfs():
         result_canvas[result_index].drawString(300,605,"MONTH OF EXAM" + "  :   " + month_of_exam + " " + str(year_of_exam))
         #sem
         result_canvas[result_index].setFont("Helvetica-Bold",10)
-        result_canvas[result_index].drawString(270,260,str(comment_final[result_index]))
+        #result_canvas[result_index].drawString(270,260,str(comment_final[result_index]))
         result_canvas[result_index].setFont("Helvetica",12)
         result_canvas[result_index].setFont("Helvetica-Bold",10)
         result_canvas[result_index].rect(40, 550, 520, 40, stroke=1, fill=0)
@@ -633,7 +633,7 @@ def createpdfs():
         result_canvas[result_index].drawCentredString(535,295,str(int(grade_credit_sum)))
 
         sem_grade_avg = grade_credit_sum/sum(course_credits)
-        result_canvas[result_index].drawString(50,275,"Semester Grade Point Average(SGPA) = "+str(round(sem_grade_avg,2)))
+        result_canvas[result_index].drawString(50,275,"Semester Grade Point Average (SGPA) = "+str(round(sem_grade_avg,2)))
         # FOR ATKT/BACKLOG
         #
 
@@ -692,36 +692,46 @@ def creat_master_xlsheet():
         ws.write(1,current_colum+1,sub)
         ws.write(2,current_colum+1,course_credits[current_colum-3])
         current_colum +=1
-    ws.write(1,current_colum+1,"SGPA")
+    ws.write(1,current_colum+1,f"Sem-{check_current_sem(current_sem)} SGPA")
+    ws.write(2,current_colum+1,sum(course_credits))
     ws.write(1,current_colum+2,"Result")
     sem_count_iterator = 1
     for i in range(current_colum+2,current_colum+1+check_current_sem(current_sem)):
         ws.write(1,i+1,f"Sem-{sem_count_iterator}")
         if sem_count_iterator ==1:
+            ws.write(2,i+1,credit_sem_1[0])
             for j in range(stud_count):
                 ws.write(3+j,current_colum+2+1,student_sem_1[j])
         if sem_count_iterator ==2:
+            ws.write(2,i+1,credit_sem_2[0])
             for j in range(stud_count):
                 ws.write(3+j,current_colum+3+1,student_sem_2[j])
         if sem_count_iterator ==3:
+            ws.write(2,i+1,credit_sem_3[0])
             for j in range(stud_count):
                 ws.write(3+j,current_colum+4+1,student_sem_3[j])
         if sem_count_iterator ==4:
+            ws.write(2,i+1,credit_sem_4[0])
             for j in range(stud_count):
                 ws.write(3+j,current_colum+5+1,student_sem_4[j])
         if sem_count_iterator ==5:
+            ws.write(2,i+1,credit_sem_5[0])
             for j in range(stud_count):
                 ws.write(3+j,current_colum+6+1,student_sem_5[j])
         if sem_count_iterator ==6:
+            ws.write(2,i+1,credit_sem_6[0])
             for j in range(stud_count):
                 ws.write(3+j,current_colum+7+1,student_sem_6[j])
         if sem_count_iterator ==7:
+            ws.write(2,i+1,credit_sem_7[0])
             for j in range(stud_count):
                 ws.write(3+j,current_colum+8+1,student_sem_7[j])
         if sem_count_iterator ==8:
+            ws.write(2,i+1,credit_sem_8[0])
             for j in range(stud_count):
                 ws.write(3+j,current_colum+9+1,student_sem_8[j])
         if sem_count_iterator ==9:
+            ws.write(2,i+1,credit_sem_9[0])
             for j in range(stud_count):
                 ws.write(3+j,current_colum+10+1,student_sem_9[j])
         sem_count_iterator+=1
