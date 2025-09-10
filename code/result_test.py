@@ -356,10 +356,15 @@ def createpdfs():
         # result_canvas[result_index].setFont("Helvetica-Bold",14)
         # result_canvas[result_index].drawCentredString(295,710,stmy_grade)
         # adding 20 in y for making space for signatures at bottom
-        result_canvas[result_index].setFont("Helvetica-Bold",14)
-        result_canvas[result_index].drawCentredString(300,705,new_course_name)
-        result_canvas[result_index].setFont("Helvetica-Bold",14)
-        result_canvas[result_index].drawCentredString(300,685,degree_name)
+        if "master" not in course_name.lower():
+            result_canvas[result_index].setFont("Helvetica-Bold",14)
+            result_canvas[result_index].drawCentredString(300,705,new_course_name)
+        else:
+            result_canvas[result_index].setFont("Helvetica-Bold",14)
+            result_canvas[result_index].drawCentredString(300,700,course_name+" "+branch_name)
+        if "master" not in course_name.lower():
+            result_canvas[result_index].setFont("Helvetica-Bold",14)
+            result_canvas[result_index].drawCentredString(300,685,degree_name)
         result_canvas[result_index].setFont("Helvetica-Bold",14)
         result_canvas[result_index].drawCentredString(300,665,"SEMESTER"+"-"+current_sem.upper()+","+" BATCH"+" "+batch_year)
         result_canvas[result_index].setFont("Helvetica",12)
@@ -455,7 +460,7 @@ def createpdfs():
         #@to check 5 years or 2 years
         course_branch = course_name+branch_name
         is_five = False
-        if "iot" in course_branch.lower() or "internet of things" in course_branch.lower():
+        if "five year" in course_branch.lower():
             is_five = True
             result_canvas[result_index].rect(160, 115, 40,100, stroke=1, fill=0)
             result_canvas[result_index].drawCentredString(175,200,"I")
@@ -477,7 +482,7 @@ def createpdfs():
             result_canvas[result_index].rect(480, 115, 40, 100, stroke=1, fill=0)
             result_canvas[result_index].drawCentredString(495,200,"IX")
             result_canvas[result_index].drawCentredString(535,200,"X")
-        elif "executive" in course_branch.lower() or "instrumentation" in course_branch.lower():
+        elif "executive" in course_branch.lower() or "instrumentation" in course_branch.lower() or "master" in course_name.lower():
             result_canvas[result_index].rect(160, 115, 100,100, stroke=1, fill=0)
             result_canvas[result_index].drawCentredString(210,200,"I")
             result_canvas[result_index].rect(260, 115, 100,100, stroke=1, fill=0)
@@ -614,10 +619,10 @@ def createpdfs():
                 is_ATKT_fail = 'ATKT'
                 fail_credits += course_credits[i]
             start_y = start_y-20
-        if sum(course_credits)-fail_credits >12:
-            is_ATKT_fail = "FAIL"
-            #else:
-            #    is_ATKT_fail = "PASS"
+        # if sum(course_credits)-fail_credits >12:
+        #     is_ATKT_fail = "FAIL"
+        #     #else:
+        #     #    is_ATKT_fail = "PASS"
 
 
         start_x = 525
@@ -633,6 +638,7 @@ def createpdfs():
         result_canvas[result_index].drawCentredString(535,295,str(int(grade_credit_sum)))
 
         sem_grade_avg = grade_credit_sum/sum(course_credits)
+        result_canvas[result_index].setFont("Helvetica-Bold",11)
         result_canvas[result_index].drawString(50,275,"Semester Grade Point Average (SGPA) = "+str(round(sem_grade_avg,2)))
         # FOR ATKT/BACKLOG
         #
