@@ -308,6 +308,7 @@ def createpdfs():
     global wb_subject
     is_ATKT_fail = ''
     fail_credits=0
+    credits_secured_by_student=0
     global students_roll_no
     global student_enroloment_no
     #global subjects_grades
@@ -587,6 +588,7 @@ def createpdfs():
     for student in range(stud_count):
         is_ATKT_fail = 'PASS'
         fail_credits = 0
+        credits_secured_by_student = 0
         result_canvas[result_index].setFont("Helvetica",11)
         start_x = 70
         start_y = 535
@@ -618,8 +620,10 @@ def createpdfs():
             if 'F' in subjects_grades[i][result_index]:
                 is_ATKT_fail = 'ATKT'
                 fail_credits += course_credits[i]
+            else:
+                credits_secured_by_student+=course_credits[i]
             start_y = start_y-20
-        if fail_credits > 12:
+        if credits_secured_by_student < 12:
             is_ATKT_fail = "FAIL"
         #     #else:
         #     #    is_ATKT_fail = "PASS"
