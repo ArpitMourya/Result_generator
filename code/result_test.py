@@ -361,7 +361,7 @@ def createpdfs():
             result_canvas[result_index].drawCentredString(300,705,new_course_name)
         else:
             result_canvas[result_index].setFont("Helvetica-Bold",14)
-            result_canvas[result_index].drawCentredString(300,700,course_name+" "+branch_name)
+            result_canvas[result_index].drawCentredString(300,695,course_name+" "+branch_name)
         if "master" not in course_name.lower():
             result_canvas[result_index].setFont("Helvetica-Bold",14)
             result_canvas[result_index].drawCentredString(300,685,degree_name)
@@ -619,8 +619,8 @@ def createpdfs():
                 is_ATKT_fail = 'ATKT'
                 fail_credits += course_credits[i]
             start_y = start_y-20
-        # if sum(course_credits)-fail_credits >12:
-        #     is_ATKT_fail = "FAIL"
+        if fail_credits > 12:
+            is_ATKT_fail = "FAIL"
         #     #else:
         #     #    is_ATKT_fail = "PASS"
 
