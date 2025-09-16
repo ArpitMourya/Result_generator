@@ -400,18 +400,33 @@ def createpdfs():
         result_canvas[result_index].setFont("Helvetica",12)
         result_canvas[result_index].setFont("Helvetica-Bold",10)
         result_canvas[result_index].rect(40, 550, 520, 40, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 310, 60, 280, stroke=1, fill=0)
         
-        result_canvas[result_index].rect(40, 310, 335, 280, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 290, 395, 300, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 290, 465, 300, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 510, 520, 40, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 510, 520, 20, stroke=1, fill=0)
+            
         result_canvas[result_index].rect(40, 510, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].rect(40, 490, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].rect(40, 470, 520, 20, stroke=1, fill=0)
-        if check_current_sem(current_sem) !=10:
-           
+        # ...existing code...
+        # --- table rectangles: make compact for 10th semester, keep original for others ---
+        if check_current_sem(current_sem) == 10:
+            # For Bounding Boxes of Table
+            result_canvas[result_index].rect(40, 430, 60, 160, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 430, 335, 160, stroke=1, fill=0)
+            result_canvas[result_index].rect(40,430, 395, 160, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 430, 465, 160, stroke=1, fill=0)
+            # compact outer table and header for 10th sem (reduce height -> no big blank area)
+            result_canvas[result_index].rect(40, 430, 520, 120, stroke=1, fill=0)   # smaller outer box
+            result_canvas[result_index].rect(40, 510, 520, 40, stroke=1, fill=0)    # header block (as before)
+            result_canvas[result_index].rect(40, 490, 520, 20, stroke=1, fill=0)    # sub-header line
+            result_canvas[result_index].rect(40, 430, 520, 20, stroke=1, fill=0)    # subject header row
+        else:
+            # original (keeps many rows / full height for semesters < 10)
+            result_canvas[result_index].rect(40, 310, 335, 280, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 290, 395, 300, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 290, 465, 300, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 510, 520, 40, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 510, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 490, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 470, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].rect(40, 450, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].rect(40, 430, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].rect(40, 410, 520, 20, stroke=1, fill=0)
@@ -419,7 +434,27 @@ def createpdfs():
             result_canvas[result_index].rect(40, 370, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].rect(40, 350, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].rect(40, 330, 520, 20, stroke=1, fill=0)
-
+            result_canvas[result_index].rect(40, 310, 60, 280, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 310, 520, 200, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 290, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 290, 335, 20, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 270, 520, 20, stroke=1, fill=0)
+        # ...existing code...
+        # if check_current_sem(current_sem) !=10:
+           
+        #     result_canvas[result_index].rect(40, 450, 520, 20, stroke=1, fill=0)
+        #     result_canvas[result_index].rect(40, 430, 520, 20, stroke=1, fill=0)
+        #     result_canvas[result_index].rect(40, 410, 520, 20, stroke=1, fill=0)
+        #     result_canvas[result_index].rect(40, 390, 520, 20, stroke=1, fill=0)
+        #     result_canvas[result_index].rect(40, 370, 520, 20, stroke=1, fill=0)
+        #     result_canvas[result_index].rect(40, 350, 520, 20, stroke=1, fill=0)
+        #     result_canvas[result_index].rect(40, 330, 520, 20, stroke=1, fill=0)
+        # result_canvas[result_index].rect(40, 310, 520, 200, stroke=1, fill=0)
+        # result_canvas[result_index].rect(40, 310, 520, 200, stroke=1, fill=0)
+        # result_canvas[result_index].rect(40, 290, 520, 20, stroke=1, fill=0)
+        # result_canvas[result_index].rect(40, 290, 335, 20, stroke=1, fill=0)
+        # result_canvas[result_index].rect(40, 270, 520, 20, stroke=1, fill=0)
+        
         result_canvas[result_index].drawCentredString(70,575,"COURSE")
         result_canvas[result_index].drawCentredString(70,560,"CODE")
         result_canvas[result_index].drawCentredString(230,565,"SUBJECT NAME")
@@ -431,10 +466,7 @@ def createpdfs():
         result_canvas[result_index].drawCentredString(535,565,"POINT")
         result_canvas[result_index].drawCentredString(535,555,"CREDITS")
 
-        result_canvas[result_index].rect(40, 310, 520, 200, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 290, 520, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 290, 335, 20, stroke=1, fill=0)
-        result_canvas[result_index].rect(40, 270, 520, 20, stroke=1, fill=0)
+
         result_canvas[result_index].setFont("Helvetica-Bold",11)
         result_canvas[result_index].drawCentredString(325,295,"TOTAL CREDITS")
         #
