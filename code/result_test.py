@@ -331,7 +331,7 @@ def createpdfs():
     wb= copy(rd)
     wb.save(output_folder+"\\"+"student_detail_new.xls")
     #^relate with line number 654
-    if ("tenth" in current_sem.lower()) or ("ten" in current_sem.lower()) or ("ninth" in current_sem.lower()) or ("nine" in current_sem.lower()):
+    if check_current_sem(current_sem) ==10 or check_current_sem(current_sem) ==9:
         new_course_name = "MASTER OF TECHNOLOGY (INTERNET OF THINGS)"
     else:
         new_course_name = "BACHELOR OF TECHNOLOGY (INTERNET OF THINGS)"
