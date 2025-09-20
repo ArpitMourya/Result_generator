@@ -4,3 +4,19 @@ Hit and Trial Modify layout of Marksheet, but can automate using AI tools.
 Fill with every semester : like  1 2 3 .. till particular semester.
 
 for 10th semester reduce the line of subject-grade tables . and design the new table .
+
+Available Fonts in Report Lab :
+- Courier
+- Courier-Bold
+- Courier-BoldOblique
+- Courier-Oblique
+- Helvetica
+- Helvetica-Bold
+- Helvetica-BoldOblique
+- Helvetica-Oblique
+- Symbol
+- Times-Bold
+- Times-BoldItalic
+- Times-Italic
+- Times-Roman
+- ZapfDingbats

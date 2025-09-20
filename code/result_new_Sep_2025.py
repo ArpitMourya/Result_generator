@@ -65,6 +65,8 @@ sub_count =0
 no_of_students = 0
 sem_grade_avg = 0
 #@
+MM_TO_PT = 72.0 / 25.4  # 1 mm in points (~2.83464567)
+
 def help():
     open("https://github.com/ArpitMourya/Result_generator")
 def generate_result():
@@ -302,6 +304,70 @@ def getGradeintocredit(cr,grade):
         return (credit*4)
     else:
         return (0)
+
+def draw_ruler(c, page_size=A4, offset_mm=10, top=True, left=True, bottom=False, right=False):
+    """
+    Draw rulers on given ReportLab canvas c.
+    - page_size: (width, height) tuple, default A4
+    - offset_mm: distance from edge where ruler is drawn (mm)
+    - top/left/bottom/right: which rulers to draw
+    """
+    w_pt, h_pt = page_size
+    offset = offset_mm * MM_TO_PT
+
+    def _draw_horizontal(y_pt):
+        # horizontal ruler across full width
+        c.setLineWidth(0.5)
+        c.line(0, y_pt, w_pt, y_pt)
+        # ticks every 1 mm
+        for mm in range(int(w_pt / MM_TO_PT) + 1):
+            x = mm * MM_TO_PT
+            if mm % 10 == 0:            # every 10 mm (1 cm) - major tick + label
+                tick = 10
+                c.line(x, y_pt, x, y_pt + tick)
+                label = str(mm // 10)   # cm label
+                c.setFont("Helvetica", 6)
+                c.drawCentredString(x, y_pt + tick + 4, label)
+            elif mm % 5 == 0:           # every 5 mm - medium tick
+                tick = 6
+                c.line(x, y_pt, x, y_pt + tick)
+            else:                       # 1 mm minor tick
+                tick = 3
+                c.line(x, y_pt, x, y_pt + tick)
+
+    def _draw_vertical(x_pt):
+        # vertical ruler across full height
+        c.setLineWidth(0.5)
+        c.line(x_pt, 0, x_pt, h_pt)
+        for mm in range(int(h_pt / MM_TO_PT) + 1):
+            y = mm * MM_TO_PT
+            if mm % 10 == 0:
+                tick = 10
+                c.line(x_pt, y, x_pt + tick, y)
+                label = str(mm // 10)
+                # rotated label for vertical ruler
+                c.saveState()
+                c.translate(x_pt + tick + 4, y - 2)
+                c.rotate(90)
+                c.setFont("Helvetica", 6)
+                c.drawString(0, 0, label)
+                c.restoreState()
+            elif mm % 5 == 0:
+                tick = 6
+                c.line(x_pt, y, x_pt + tick, y)
+            else:
+                tick = 3
+                c.line(x_pt, y, x_pt + tick, y)
+
+    if top:
+        _draw_horizontal(h_pt - offset)
+    if bottom:
+        _draw_horizontal(offset)
+    if left:
+        _draw_vertical(offset)
+    if right:
+        _draw_vertical(w_pt - offset)
+
 def createpdfs():
     inch = 72
     global ent_date
@@ -309,6 +375,9 @@ def createpdfs():
     is_ATKT_fail = ''
     fail_credits=0
     credits_secured_by_student=0
+    total_credits =0
+    total_grade_points =0
+    division = ""
     global students_roll_no
     global student_enroloment_no
     #global subjects_grades
@@ -331,7 +400,7 @@ def createpdfs():
     wb= copy(rd)
     wb.save(output_folder+"\\"+"student_detail_new.xls")
     #^relate with line number 654
-    if check_current_sem(current_sem) ==10 or check_current_sem(current_sem) ==9:
+    if check_current_sem(current_sem) in [9, 10]:
         new_course_name = "MASTER OF TECHNOLOGY (INTERNET OF THINGS)"
     else:
         new_course_name = "BACHELOR OF TECHNOLOGY (INTERNET OF THINGS)"
@@ -341,7 +410,11 @@ def createpdfs():
 
         result_canvas.insert(result_index,Canvas(output_folder+"\\"+student_enroloment_no[result_index]+".pdf",pagesize=A4))
         result_canvas[result_index].setTitle(student)
-
+        
+        """
+        Uncomment `draw_ruler` function line to test the positions of words and table.
+        """
+        draw_ruler(result_canvas[result_index], page_size=A4, offset_mm=10, top=True, left=True)
         '''
         These comments are for future templet of result , this is to print university name at top of the result.
         '''
@@ -406,20 +479,22 @@ def createpdfs():
         result_canvas[result_index].rect(40, 490, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].rect(40, 470, 520, 20, stroke=1, fill=0)
         # ...existing code...
-        # --- table rectangles: make compact for 10th semester, keep original for others ---
-        if check_current_sem(current_sem) == 10:
+        # --- table rectangles: make compact for 8th and 10th semester, keep original for others ---
+        if check_current_sem(current_sem) in [8, 10]:
             # For Bounding Boxes of Table
-            result_canvas[result_index].rect(40, 430, 60, 160, stroke=1, fill=0)
-            result_canvas[result_index].rect(40, 430, 335, 160, stroke=1, fill=0)
-            result_canvas[result_index].rect(40, 430, 395, 160, stroke=1, fill=0)
-            result_canvas[result_index].rect(40, 430, 465, 160, stroke=1, fill=0)
-            # compact outer table and header for 10th sem (reduce height -> no big blank area)
-            result_canvas[result_index].rect(40, 430, 520, 120, stroke=1, fill=0)   # smaller outer box
-            result_canvas[result_index].rect(40, 510, 520, 40, stroke=1, fill=0)    # header block (as before)
-            result_canvas[result_index].rect(40, 490, 520, 20, stroke=1, fill=0)    # sub-header line
-            result_canvas[result_index].rect(40, 430, 520, 20, stroke=1, fill=0)    # subject header row
+            result_canvas[result_index].rect(40, 370, 60, 220, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 370, 335, 220, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 370, 395, 220, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 370, 465, 220, stroke=1, fill=0)
+            # compact outer table and header for 8th and 10th sem (reduce height -> no big blank area)
+            result_canvas[result_index].rect(40, 370, 520, 220, stroke=1, fill=0)   
+            result_canvas[result_index].rect(40, 510, 520, 40, stroke=1, fill=0)    
+            result_canvas[result_index].rect(40, 490, 520, 20, stroke=1, fill=0)    
+            result_canvas[result_index].rect(40, 430, 520, 20, stroke=1, fill=0)   
+            result_canvas[result_index].rect(40, 390, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 410, 520, 20, stroke=1, fill=0)
         else:
-            # original (keeps many rows / full height for semesters < 10)
+            # original (keeps many rows / full height for semesters 8th and 10th)
             result_canvas[result_index].rect(40, 310, 335, 280, stroke=1, fill=0)
             result_canvas[result_index].rect(40, 290, 395, 300, stroke=1, fill=0)
             result_canvas[result_index].rect(40, 290, 465, 300, stroke=1, fill=0)
@@ -466,30 +541,30 @@ def createpdfs():
         result_canvas[result_index].drawCentredString(535,565,"POINT")
         result_canvas[result_index].drawCentredString(535,555,"CREDITS")
 
-        if check_current_sem(current_sem)==10:
+        if check_current_sem(current_sem) in [8, 10]:
             result_canvas[result_index].setFont("Helvetica-Bold",11)
-            result_canvas[result_index].drawCentredString(325,435,"TOTAL CREDITS")
+            result_canvas[result_index].drawCentredString(325,375,"TOTAL CREDITS")
             
-            result_canvas[result_index].rect(40, 335, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 305, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].setFont("Helvetica-Bold",10)
-            result_canvas[result_index].drawCentredString(300,340,"RESULT SEMESTER-WISE")
+            result_canvas[result_index].drawCentredString(300,310,"RESULT SEMESTER-WISE")
             #result_canvas[result_index].rect(40, 335, 520, 100, stroke=1, fill=0) # Do not Uncomment this.
             result_canvas[result_index].setFont("Helvetica-Bold",10)
-            result_canvas[result_index].drawCentredString(75,320,"SEMESTER")
+            result_canvas[result_index].drawCentredString(75,290,"SEMESTER")
 
-            result_canvas[result_index].rect(40, 315, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].rect(40, 285, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].setFont("Helvetica-Bold",10)
-            result_canvas[result_index].drawCentredString(70,300,"CREDITS")
-            result_canvas[result_index].rect(40, 295, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(70,270,"CREDITS")
+            result_canvas[result_index].rect(40, 265, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].setFont("Helvetica-Bold",10)
-            result_canvas[result_index].drawCentredString(63,280,"SGPA")
-            result_canvas[result_index].rect(40, 275, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(63,250,"SGPA")
+            result_canvas[result_index].rect(40, 245, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].setFont("Helvetica-Bold",10)
-            result_canvas[result_index].drawCentredString(73,260,"ATTEMPT")
-            result_canvas[result_index].rect(40, 255, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(73,230,"ATTEMPT")
+            result_canvas[result_index].rect(40, 225, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].setFont("Helvetica-Bold",10)
-            result_canvas[result_index].drawCentredString(68,240,"RESULT")
-            result_canvas[result_index].rect(40, 235, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(68,210,"RESULT")
+            result_canvas[result_index].rect(40, 205, 520, 20, stroke=1, fill=0)
         else:
             result_canvas[result_index].setFont("Helvetica-Bold",11)
             result_canvas[result_index].drawCentredString(325,295,"TOTAL CREDITS")
@@ -519,9 +594,9 @@ def createpdfs():
         is_five = False
         if "five year" in course_branch.lower():
             is_five = True
-            if check_current_sem(current_sem) ==10:
-                y_coordinate_for_box , y_coordinate_for_sem = 235 , 320
-                y_coordinate_for_credit , y_coordinate_for_sgpa , y_coordinate_for_attempt , y_coordinate_for_result = 300 , 280 , 260 , 240
+            if check_current_sem(current_sem) in [8, 10]:
+                y_coordinate_for_box , y_coordinate_for_sem = 205 , 290
+                y_coordinate_for_credit , y_coordinate_for_sgpa , y_coordinate_for_attempt , y_coordinate_for_result = 270 , 250 , 230 , 210
             else:   
                 y_coordinate_for_box , y_coordinate_for_sem = 115 , 200
                 y_coordinate_for_credit , y_coordinate_for_sgpa , y_coordinate_for_attempt , y_coordinate_for_result = 180 , 160 , 140 , 120
@@ -652,6 +727,10 @@ def createpdfs():
         is_ATKT_fail = 'PASS'
         fail_credits = 0
         credits_secured_by_student = 0
+        total_credits = 0
+        total_grade_points = 0
+        division = ""
+        cgpa = 0
         result_canvas[result_index].setFont("Helvetica",11)
         start_x = 70
         start_y = 535
@@ -673,9 +752,9 @@ def createpdfs():
             result_canvas[result_index].drawString(start_x,start_y,str(int(credit)))
             start_y = start_y-20
         
-        if check_current_sem(current_sem)==10:
+        if check_current_sem(current_sem) in [8, 10]:
             result_canvas[result_index].setFont("Helvetica",12)
-            result_canvas[result_index].drawCentredString(405,435,str(int(sum(course_credits))))
+            result_canvas[result_index].drawCentredString(405,375,str(int(sum(course_credits))))
         else:
             result_canvas[result_index].setFont("Helvetica",12)
             result_canvas[result_index].drawCentredString(405,295,str(int(sum(course_credits))))
@@ -705,18 +784,18 @@ def createpdfs():
             result_canvas[result_index].drawString(start_x,start_y,(str)(grade_credit))
             start_y = start_y-20
 
-        if check_current_sem(current_sem)==10:
+        if check_current_sem(current_sem) in [8, 10]:
             result_canvas[result_index].setFont("Helvetica",12)
-            result_canvas[result_index].drawCentredString(535,435,str(int(grade_credit_sum)))
+            result_canvas[result_index].drawCentredString(535,375,str(int(grade_credit_sum)))
         else:
             result_canvas[result_index].setFont("Helvetica",12)
             result_canvas[result_index].drawCentredString(535,295,str(int(grade_credit_sum)))
 
         sem_grade_avg = grade_credit_sum/sum(course_credits)
-        if check_current_sem(current_sem)==10:
-            result_canvas[result_index].rect(40, 410, 520, 20, stroke=1, fill=0)
+        if check_current_sem(current_sem) in [8, 10]:
+            result_canvas[result_index].rect(40, 350, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].setFont("Helvetica-Bold",11)
-            result_canvas[result_index].drawString(50,415,"Semester Grade Point Average (SGPA) = "+str(round(sem_grade_avg,2)))
+            result_canvas[result_index].drawString(50,355,"Semester Grade Point Average (SGPA) = "+str(round(sem_grade_avg,2)))
         else:
             result_canvas[result_index].setFont("Helvetica-Bold",11)
             result_canvas[result_index].drawString(50,275,"Semester Grade Point Average (SGPA) = "+str(round(sem_grade_avg,2)))
@@ -745,17 +824,78 @@ def createpdfs():
             data_of_issue = ent_date
 
         print(data_of_issue)
-        if check_current_sem(current_sem)==10:
-            result_canvas[result_index].setFont("Helvetica",10)
-            result_canvas[result_index].drawString(50,400,"*Grade in repeated Examination")
-            result_canvas[result_index].drawString(50,385,f"#  Project Submitted in the month of {month_of_exam} {str(year_of_exam)}")
+        if check_current_sem(current_sem) in [8, 10]:
+            result_canvas[result_index].setFont("Helvetica",9)
+            result_canvas[result_index].drawString(50,340,"*Grade in repeated Examination")
+            #result_canvas[result_index].drawString(50,385,f"#  Project Submitted in the month of {month_of_exam} {str(year_of_exam)}")
+            result_canvas[result_index].rect(40, 165, 520, 20, stroke=1, fill=0)
+            result_canvas[result_index].setFont("Helvetica-Bold",10)
+            result_canvas[result_index].drawCentredString(300,170,"FINAL RESULT: "+str(overall_result[result_index]))
+            result_canvas[result_index].setFont("Helvetica",9)
+            result_canvas[result_index].drawString(40,195,"SGPA : Semester Grade Point Average")
+            result_canvas[result_index].rect(40, 130 , 520, 35, stroke=1, fill=0)
+            result_canvas[result_index].setFont("Helvetica-Bold",10)
+            result_canvas[result_index].drawString(50, 155,"TOTAL CREDITS")
+            result_canvas[result_index].drawString(160, 155,"CGPA")
+            result_canvas[result_index].drawString(215, 155,"EQUIVALENT PERCENTAGE")
+            result_canvas[result_index].drawString(450, 155,"DIVISION")
+            result_canvas[result_index].line(40,150,560,150)
+            result_canvas[result_index].line(140, 130,140,165)
+            result_canvas[result_index].line(210, 130,210,165)
+            result_canvas[result_index].line(360, 130,360,165)
+        
+            total_credits = int(sum(course_credits))
+            total_grade_points = grade_credit_sum
+            division = ""
+            cgpa = round(sem_grade_avg,2)
+            for sem in range(1,check_current_sem(current_sem)):
+                # print("This is For Loop",sem)
+                # print("Credit : ",eval(f"credit_sem_{sem}"))
+                # print("SGPA : ",eval(f"student_sem_{sem}"))
+                total_credits += int(eval(f"credit_sem_{sem}[result_index]"))
+                total_grade_points += (eval(f"student_sem_{sem}[result_index]")*eval(f"credit_sem_{sem}[result_index]"))
+            
+            cgpa = round(total_grade_points/total_credits , 2)
+            
+            if cgpa >= 8.00:
+                division = "FIRST WITH DISTINCTION"
+            elif cgpa >= 6.50:
+                division = "FIRST"
+            elif cgpa >= 5.00:
+                division = "SECOND"
+            elif cgpa >= 4.00:
+                division = "PASS"
+            
+            result_canvas[result_index].setFont("Helvetica-Bold",11)
+            result_canvas[result_index].drawString(80,135,str(total_credits))
+            result_canvas[result_index].drawString(160,135,str(cgpa))
+            result_canvas[result_index].drawString(280,135,str(round(cgpa*10,2)))
+            if cgpa >= 8.00:
+                result_canvas[result_index].drawString(400,135,division)
+            else:
+                result_canvas[result_index].drawString(450,135,division)
+            result_canvas[result_index].setFont("Helvetica",9)
+            result_canvas[result_index].drawString(40,120,"CGPA: Cumulative Grade Point Average")
+            result_canvas[result_index].drawString(230,120,"Equivalent Percentage= CGPAx10")
+
         else:
+            result_canvas[result_index].setFont("Helvetica-Bold",10)
             result_canvas[result_index].drawString(50,260,"*Grade in repeated Examination")
+
+        result_canvas[result_index].setFont("Helvetica-Bold",10)
         result_canvas[result_index].drawString(50,100,"DATE OF RESULT: "+data_of_issue)
-        result_canvas[result_index].drawString(50,60,"CHECKED BY")
-        result_canvas[result_index].drawString(280,60,"RESULT")
-        result_canvas[result_index].drawString(260,50,"CO-ORDINATOR")
-        result_canvas[result_index].drawString(470,60,"HEAD")
+
+        if check_current_sem(current_sem) in [8, 10]:
+            result_canvas[result_index].drawString(50,60,"RESULT")
+            result_canvas[result_index].drawString(50,50,"CO-ORDINATOR")
+            result_canvas[result_index].drawString(280,60,"HEAD")
+            result_canvas[result_index].drawString(400,60,"EXAM CONTROLLER")
+        else:
+            result_canvas[result_index].drawString(50,60,"CHECKED BY")
+            result_canvas[result_index].drawString(280,60,"RESULT")
+            result_canvas[result_index].drawString(260,50,"CO-ORDINATOR")
+            result_canvas[result_index].drawString(470,60,"HEAD")
+
         result_canvas[result_index].save()
         result_index = result_index + 1
         #writing in student_detail_file (XL)
