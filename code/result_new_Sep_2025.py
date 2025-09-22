@@ -46,7 +46,7 @@ student_sem_8,credit_sem_8,result_sem_8,attempt_sem_8 =[],[],[],[]
 student_sem_9,credit_sem_9,result_sem_9,attempt_sem_9 =[],[],[],[]
 student_sem_10,credit_sem_10,result_sem_10,attempt_sem_10 =[],[],[],[]
 ent_date = ""
-#
+cgpa_list = []
 students_roll_no = []
 student_enroloment_no = []
 #subjects_grades = [[0]*33]*12
@@ -88,7 +88,7 @@ def generate_result():
     global student_sem_8;  global credit_sem_8;  global result_sem_8;  global attempt_sem_8
     global student_sem_9;  global credit_sem_9;  global result_sem_9;  global attempt_sem_9
     global student_sem_10; global credit_sem_10; global result_sem_10; global attempt_sem_10
-    #
+    global cgpa_list
     global students_roll_no;  global student_enroloment_no
     #global subjects_grades
     global subject_code; global subject_name
@@ -116,6 +116,7 @@ def generate_result():
     student_sem_8.clear(),credit_sem_8.clear(),result_sem_8.clear(),attempt_sem_8.clear()
     student_sem_9.clear(),credit_sem_9.clear(),result_sem_9.clear(),attempt_sem_9.clear()
     student_sem_10.clear(),credit_sem_10.clear(),result_sem_10.clear(),attempt_sem_10.clear()
+    cgpa_list.clear()
     try:
         output_folder = filedialog.askdirectory()
         n = 0
@@ -371,6 +372,7 @@ def draw_ruler(c, page_size=A4, offset_mm=10, top=True, left=True, bottom=False,
 def createpdfs():
     inch = 72
     global ent_date
+    global date_of_issue
     global wb_subject
     is_ATKT_fail = ''
     fail_credits=0
@@ -414,7 +416,7 @@ def createpdfs():
         """
         Uncomment `draw_ruler` function line to test the positions of words and table.
         """
-        draw_ruler(result_canvas[result_index], page_size=A4, offset_mm=10, top=True, left=True)
+        #draw_ruler(result_canvas[result_index], page_size=A4, offset_mm=10, top=True, left=True)
         '''
         These comments are for future templet of result , this is to print university name at top of the result.
         '''
@@ -622,6 +624,7 @@ def createpdfs():
             result_canvas[result_index].drawCentredString(495, y_coordinate_for_sem,"IX")
             result_canvas[result_index].drawCentredString(535, y_coordinate_for_sem,"X")
         elif "executive" in course_branch.lower() or "instrumentation" in course_branch.lower() or "master" in course_name.lower():
+            y_coordinate_for_credit , y_coordinate_for_sgpa , y_coordinate_for_attempt , y_coordinate_for_result = 180 , 160 , 140 , 120
             result_canvas[result_index].rect(160, 115, 100,100, stroke=1, fill=0)
             result_canvas[result_index].drawCentredString(210,200,"I")
             result_canvas[result_index].rect(260, 115, 100,100, stroke=1, fill=0)
@@ -807,7 +810,7 @@ def createpdfs():
         if is_five:
             co_ordinate = [0,170,210,250,290,330,370,410,450,490,530]
         else:
-            co_ordinate = [0,205,305,405,390,430,470,510,550,590,630]
+            co_ordinate = [0,205,305,405,505,430,470,510,550,590,630]
         result_canvas[result_index].setFont("Helvetica-Bold",10)
         result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],y_coordinate_for_sgpa,str(round(sem_grade_avg,2)))
         sem_grade_avg_list.append(round(sem_grade_avg,2))
@@ -819,11 +822,11 @@ def createpdfs():
         result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],y_coordinate_for_credit,str(int(sum(course_credits))))
 
         today = date.today()
-        data_of_issue = today.strftime("%d %B %Y")
+        date_of_issue = today.strftime("%d %B %Y")
         if (ent_date != ""):
-            data_of_issue = ent_date
+            date_of_issue = ent_date
 
-        print(data_of_issue)
+        print(date_of_issue)
         if check_current_sem(current_sem) in [8, 10]:
             result_canvas[result_index].setFont("Helvetica",9)
             result_canvas[result_index].drawString(50,340,"*Grade in repeated Examination")
@@ -856,7 +859,7 @@ def createpdfs():
                 total_grade_points += (eval(f"student_sem_{sem}[result_index]")*eval(f"credit_sem_{sem}[result_index]"))
             
             cgpa = round(total_grade_points/total_credits , 2)
-            
+            cgpa_list.append(cgpa)
             if cgpa >= 8.00:
                 division = "FIRST WITH DISTINCTION"
             elif cgpa >= 6.50:
@@ -876,14 +879,14 @@ def createpdfs():
                 result_canvas[result_index].drawString(450,135,division)
             result_canvas[result_index].setFont("Helvetica",9)
             result_canvas[result_index].drawString(40,120,"CGPA: Cumulative Grade Point Average")
-            result_canvas[result_index].drawString(230,120,"Equivalent Percentage= CGPAx10")
+            result_canvas[result_index].drawString(215,120,"Equivalent Percentage= CGPAx10")
 
         else:
             result_canvas[result_index].setFont("Helvetica-Bold",10)
             result_canvas[result_index].drawString(50,260,"*Grade in repeated Examination")
 
         result_canvas[result_index].setFont("Helvetica-Bold",10)
-        result_canvas[result_index].drawString(50,100,"DATE OF RESULT: "+data_of_issue)
+        result_canvas[result_index].drawString(50,100,"DATE OF RESULT: "+date_of_issue)
 
         if check_current_sem(current_sem) in [8, 10]:
             result_canvas[result_index].drawString(50,60,"RESULT")
@@ -914,9 +917,10 @@ def createpdfs():
         strt_index_r+=1
     creat_master_xlsheet()
 def creat_master_xlsheet():
+    global date_of_issue
     wrte = xlwt.Workbook()
     ws =wrte.add_sheet("master_sheet")
-    ws.write(1,0,"Sr No."),ws.write(1,1,"Student Name"),ws.write(1,2,"Roll Number"),ws.write(2,3,"Credits :-"),ws.write(1,3,"Enrolment Number")
+    ws.write(1,0,"Sr No."),ws.write(0,0,"Date of Issue :"),ws.write(0,1,date_of_issue),ws.write(1,1,"Student Name"),ws.write(1,2,"Roll Number"),ws.write(2,3,"Credits :-"),ws.write(1,3,"Enrolment Number")
     current_colum = 3
     for sub in subject_name:
         ws.write(0,current_colum+1,subject_code[current_colum-3])
@@ -955,7 +959,11 @@ def creat_master_xlsheet():
                 ws.write(3+j,current_colum+7+1,student_sem_6[j])
         if sem_count_iterator ==7:
             ws.write(2,i+1,credit_sem_7[0])
+            if check_current_sem(current_sem) == 8:
+                ws.write(1,i+2,"CGPA")
             for j in range(stud_count):
+                if check_current_sem(current_sem) == 8:
+                    ws.write(3+j,current_colum+8+2,cgpa_list[j])
                 ws.write(3+j,current_colum+8+1,student_sem_7[j])
         if sem_count_iterator ==8:
             ws.write(2,i+1,credit_sem_8[0])
@@ -963,7 +971,11 @@ def creat_master_xlsheet():
                 ws.write(3+j,current_colum+9+1,student_sem_8[j])
         if sem_count_iterator ==9:
             ws.write(2,i+1,credit_sem_9[0])
+            if check_current_sem(current_sem) == 10:
+                ws.write(1,i+2,"CGPA")
             for j in range(stud_count):
+                if check_current_sem(current_sem) == 10:
+                    ws.write(3+j,current_colum+10+2,cgpa_list[j])
                 ws.write(3+j,current_colum+10+1,student_sem_9[j])
         sem_count_iterator+=1
     row_num =1
@@ -982,6 +994,9 @@ def creat_master_xlsheet():
         #ws.write(row_num,1,name)
         row_for_sgpa+=1
     wrte.save( output_folder + "//"+ 'master sheet.xls')
+    current_colum , sem_count_iterator, row_for_sgpa,row_num = 3,1,1,1
+    sem_grade_avg_list.clear()
+
 def browse_file(i):
     global file_locations
     global no_of_files
