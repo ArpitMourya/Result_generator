@@ -62,6 +62,7 @@ year_of_exam = ""
 stud_count=0
 sub_count =0
 #@
+two_year=False
 no_of_students = 0
 sem_grade_avg = 0
 #@
@@ -397,6 +398,7 @@ def createpdfs():
     global branch_name
     global batch_year
     global output_folder
+    global two_year
     #writing in student_detail_file at result folder (XL)
     rd =xlrd.open_workbook(students_detail_wb)
     wb= copy(rd)
@@ -475,14 +477,18 @@ def createpdfs():
         result_canvas[result_index].setFont("Helvetica",12)
         result_canvas[result_index].setFont("Helvetica-Bold",10)
         result_canvas[result_index].rect(40, 550, 520, 40, stroke=1, fill=0)
-        
+        #@to check 5 years or 2 years
+        course_branch = course_name+branch_name
+        two_year=False
+        if "executive" in course_branch.lower() or "instrumentation" in course_branch.lower() or "master" in course_name.lower():
+            two_year = True
             
         result_canvas[result_index].rect(40, 510, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].rect(40, 490, 520, 20, stroke=1, fill=0)
         result_canvas[result_index].rect(40, 470, 520, 20, stroke=1, fill=0)
         # ...existing code...
         # --- table rectangles: make compact for 8th and 10th semester, keep original for others ---
-        if check_current_sem(current_sem) in [8, 10]:
+        if (check_current_sem(current_sem) in [8, 10])  or (two_year and check_current_sem(current_sem)==4):
             # For Bounding Boxes of Table
             result_canvas[result_index].rect(40, 370, 60, 220, stroke=1, fill=0)
             result_canvas[result_index].rect(40, 370, 335, 220, stroke=1, fill=0)
@@ -543,7 +549,7 @@ def createpdfs():
         result_canvas[result_index].drawCentredString(535,565,"POINT")
         result_canvas[result_index].drawCentredString(535,555,"CREDITS")
 
-        if check_current_sem(current_sem) in [8, 10]:
+        if (check_current_sem(current_sem) in [8, 10]) or (two_year and check_current_sem(current_sem)==4):
             result_canvas[result_index].setFont("Helvetica-Bold",11)
             result_canvas[result_index].drawCentredString(325,375,"TOTAL CREDITS")
             
@@ -591,8 +597,7 @@ def createpdfs():
             result_canvas[result_index].setFont("Helvetica-Bold",10)
             result_canvas[result_index].drawCentredString(68,120,"RESULT")
             result_canvas[result_index].rect(40, 115, 520, 20, stroke=1, fill=0)
-        #@to check 5 years or 2 years
-        course_branch = course_name+branch_name
+        
         is_five = False
         if "five year" in course_branch.lower():
             is_five = True
@@ -624,15 +629,20 @@ def createpdfs():
             result_canvas[result_index].drawCentredString(495, y_coordinate_for_sem,"IX")
             result_canvas[result_index].drawCentredString(535, y_coordinate_for_sem,"X")
         elif "executive" in course_branch.lower() or "instrumentation" in course_branch.lower() or "master" in course_name.lower():
-            y_coordinate_for_credit , y_coordinate_for_sgpa , y_coordinate_for_attempt , y_coordinate_for_result = 180 , 160 , 140 , 120
-            result_canvas[result_index].rect(160, 115, 100,100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(210,200,"I")
-            result_canvas[result_index].rect(260, 115, 100,100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(310,200,"II")
-            result_canvas[result_index].rect(360, 115, 100,100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(410,200,"III")
-            result_canvas[result_index].rect(460, 115, 100,100, stroke=1, fill=0)
-            result_canvas[result_index].drawCentredString(510,200,"IV")
+            if check_current_sem(current_sem) == 4:
+                y_coordinate_for_box , y_coordinate_for_sem = 205 , 290
+                y_coordinate_for_credit , y_coordinate_for_sgpa , y_coordinate_for_attempt , y_coordinate_for_result = 270 , 250 , 230 , 210
+            else:
+                y_coordinate_for_box , y_coordinate_for_sem = 115 , 200
+                y_coordinate_for_credit , y_coordinate_for_sgpa , y_coordinate_for_attempt , y_coordinate_for_result = 180 , 160 , 140 , 120
+            result_canvas[result_index].rect(160, y_coordinate_for_box, 100,100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(210,y_coordinate_for_sem,"I")
+            result_canvas[result_index].rect(260, y_coordinate_for_box, 100,100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(310,y_coordinate_for_sem,"II")
+            result_canvas[result_index].rect(360, y_coordinate_for_box, 100,100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(410,y_coordinate_for_sem,"III")
+            result_canvas[result_index].rect(460, y_coordinate_for_box, 100,100, stroke=1, fill=0)
+            result_canvas[result_index].drawCentredString(510,y_coordinate_for_sem,"IV")
         #logic for fetching data from xl for previous sem (exclude current sem)
         if check_current_sem(current_sem) >1:
             if is_five:
@@ -641,10 +651,10 @@ def createpdfs():
                 result_canvas[result_index].drawString(170,y_coordinate_for_result,str(result_sem_1[result_index]))
                 result_canvas[result_index].drawString(170,y_coordinate_for_attempt,str(int(attempt_sem_1[result_index])))
             else :
-                result_canvas[result_index].drawString(205,160,str(student_sem_1[result_index]))
-                result_canvas[result_index].drawString(205,180,str(int(credit_sem_1[result_index])))
-                result_canvas[result_index].drawString(205,120,str(result_sem_1[result_index]))
-                result_canvas[result_index].drawString(205,140,str(int(attempt_sem_1[result_index])))
+                result_canvas[result_index].drawString(205,y_coordinate_for_sgpa,str(student_sem_1[result_index]))
+                result_canvas[result_index].drawString(205,y_coordinate_for_credit,str(int(credit_sem_1[result_index])))
+                result_canvas[result_index].drawString(205,y_coordinate_for_result,str(result_sem_1[result_index]))
+                result_canvas[result_index].drawString(205,y_coordinate_for_attempt,str(int(attempt_sem_1[result_index])))
         if check_current_sem(current_sem) >2:
             if is_five:
                 result_canvas[result_index].drawString(210,y_coordinate_for_sgpa,str(student_sem_2[result_index]))
@@ -652,10 +662,10 @@ def createpdfs():
                 result_canvas[result_index].drawString(210,y_coordinate_for_result,str(result_sem_2[result_index]))
                 result_canvas[result_index].drawString(210,y_coordinate_for_attempt,str(int(attempt_sem_2[result_index])))
             else:
-                result_canvas[result_index].drawString(305,160,str(student_sem_2[result_index]))
-                result_canvas[result_index].drawString(305,180,str(int(credit_sem_2[result_index])))
-                result_canvas[result_index].drawString(305,120,str(result_sem_2[result_index]))
-                result_canvas[result_index].drawString(305,140,str(int(attempt_sem_2[result_index])))
+                result_canvas[result_index].drawString(305,y_coordinate_for_sgpa,str(student_sem_2[result_index]))
+                result_canvas[result_index].drawString(305,y_coordinate_for_credit,str(int(credit_sem_2[result_index])))
+                result_canvas[result_index].drawString(305,y_coordinate_for_result,str(result_sem_2[result_index]))
+                result_canvas[result_index].drawString(305,y_coordinate_for_attempt,str(int(attempt_sem_2[result_index])))
         if check_current_sem(current_sem) >3:
             if is_five:
                 result_canvas[result_index].drawString(250,y_coordinate_for_sgpa,str(student_sem_3[result_index]))
@@ -663,10 +673,10 @@ def createpdfs():
                 result_canvas[result_index].drawString(250,y_coordinate_for_result,str(result_sem_3[result_index]))
                 result_canvas[result_index].drawString(250,y_coordinate_for_attempt,str(int(attempt_sem_3[result_index])))
             else:
-                result_canvas[result_index].drawString(405,160,str(student_sem_3[result_index]))
-                result_canvas[result_index].drawString(405,180,str(int(credit_sem_3[result_index])))
-                result_canvas[result_index].drawString(405,120,str(result_sem_3[result_index]))
-                result_canvas[result_index].drawString(405,140,str(int(attempt_sem_3[result_index])))
+                result_canvas[result_index].drawString(405,y_coordinate_for_sgpa,str(student_sem_3[result_index]))
+                result_canvas[result_index].drawString(405,y_coordinate_for_credit,str(int(credit_sem_3[result_index])))
+                result_canvas[result_index].drawString(405,y_coordinate_for_result,str(result_sem_3[result_index]))
+                result_canvas[result_index].drawString(405,y_coordinate_for_attempt,str(int(attempt_sem_3[result_index])))
         if check_current_sem(current_sem) >4:
             result_canvas[result_index].drawString(290,y_coordinate_for_sgpa,str(student_sem_4[result_index]))
             result_canvas[result_index].drawString(290,y_coordinate_for_credit,str(int(credit_sem_4[result_index])))
@@ -755,7 +765,7 @@ def createpdfs():
             result_canvas[result_index].drawString(start_x,start_y,str(int(credit)))
             start_y = start_y-20
         
-        if check_current_sem(current_sem) in [8, 10]:
+        if (check_current_sem(current_sem) in [8, 10])  or (two_year and check_current_sem(current_sem)==4):
             result_canvas[result_index].setFont("Helvetica",12)
             result_canvas[result_index].drawCentredString(405,375,str(int(sum(course_credits))))
         else:
@@ -787,7 +797,7 @@ def createpdfs():
             result_canvas[result_index].drawString(start_x,start_y,(str)(grade_credit))
             start_y = start_y-20
 
-        if check_current_sem(current_sem) in [8, 10]:
+        if (check_current_sem(current_sem) in [8, 10]) or (two_year and check_current_sem(current_sem)==4):
             result_canvas[result_index].setFont("Helvetica",12)
             result_canvas[result_index].drawCentredString(535,375,str(int(grade_credit_sum)))
         else:
@@ -795,7 +805,7 @@ def createpdfs():
             result_canvas[result_index].drawCentredString(535,295,str(int(grade_credit_sum)))
 
         sem_grade_avg = grade_credit_sum/sum(course_credits)
-        if check_current_sem(current_sem) in [8, 10]:
+        if (check_current_sem(current_sem) in [8, 10] ) or (two_year and check_current_sem(current_sem)==4):
             result_canvas[result_index].rect(40, 350, 520, 20, stroke=1, fill=0)
             result_canvas[result_index].setFont("Helvetica-Bold",11)
             result_canvas[result_index].drawString(50,355,"Semester Grade Point Average (SGPA) = "+str(round(sem_grade_avg,2)))
@@ -827,7 +837,7 @@ def createpdfs():
             date_of_issue = ent_date
 
         print(date_of_issue)
-        if check_current_sem(current_sem) in [8, 10]:
+        if (check_current_sem(current_sem) in [8, 10] )  or (two_year and check_current_sem(current_sem)==4):
             result_canvas[result_index].setFont("Helvetica",9)
             result_canvas[result_index].drawString(50,340,"*Grade in repeated Examination")
             #result_canvas[result_index].drawString(50,385,f"#  Project Submitted in the month of {month_of_exam} {str(year_of_exam)}")
@@ -888,7 +898,7 @@ def createpdfs():
         result_canvas[result_index].setFont("Helvetica-Bold",10)
         result_canvas[result_index].drawString(50,100,"DATE OF RESULT: "+date_of_issue)
 
-        if check_current_sem(current_sem) in [8, 10]:
+        if (check_current_sem(current_sem) in [8, 10]) or  (two_year and check_current_sem(current_sem)==4):
             result_canvas[result_index].drawString(50,60,"RESULT")
             result_canvas[result_index].drawString(50,50,"CO-ORDINATOR")
             result_canvas[result_index].drawString(280,60,"HEAD")
@@ -918,6 +928,7 @@ def createpdfs():
     creat_master_xlsheet()
 def creat_master_xlsheet():
     global date_of_issue
+    global two_year
     wrte = xlwt.Workbook()
     ws =wrte.add_sheet("master_sheet")
     ws.write(1,0,"Sr No."),ws.write(0,0,"Date of Issue :"),ws.write(0,1,date_of_issue),ws.write(1,1,"Student Name"),ws.write(1,2,"Roll Number"),ws.write(2,3,"Credits :-"),ws.write(1,3,"Enrolment Number")
@@ -943,7 +954,11 @@ def creat_master_xlsheet():
                 ws.write(3+j,current_colum+3+1,student_sem_2[j])
         if sem_count_iterator ==3:
             ws.write(2,i+1,credit_sem_3[0])
+            if  (two_year and check_current_sem(current_sem)==4):
+                ws.write(1,i+2,"CGPA")
             for j in range(stud_count):
+                if (two_year and check_current_sem(current_sem) == 4):
+                    ws.write(3+j,current_colum+4+2,cgpa_list[j])
                 ws.write(3+j,current_colum+4+1,student_sem_3[j])
         if sem_count_iterator ==4:
             ws.write(2,i+1,credit_sem_4[0])
