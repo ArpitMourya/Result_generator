@@ -1,5 +1,12 @@
 fail credits 12 me ATKT hai ,
+
+A student is considered is fail if the student has secured less than 12 credits in current semester and ATKT in any subject, then it will be considered as fail.
+This condition is based on the university rules and can be changed as per the requirement.
+
+if student has failed in any subject, then it will be considered as ATKT.
+
 Hit and Trial Modify layout of Marksheet, but can automate using AI tools.
+Install required libraries using `requirements.txt`.
 
 Fill with every semester : like  1 2 3 .. till particular semester.
 
@@ -20,3 +27,22 @@ Available Fonts in Report Lab :
 - Times-Italic
 - Times-Roman
 - ZapfDingbats
+
+Here are some details about the code variables and Reportlab Canvas :
+
+Lists : 
+Total Credits (Sum of all subject's credits) of subjects present in that semester, for each sem X is stored in `credit_sem_X` (element_datatype: int) where X = 1:10,
+SGPA in sem X for each same student is stored in `student_sem_X` (element_datatype: float) where X=1:10
+Total Number of Attempt for main examination in sem X for each same student is stored in `attempt_sem_X` (element_datatype: int) where X=1:10
+Results (PASS, ATKT, FAIL) for each same student in that semester X  is stored in `result_sem_X` (element_datatype: str) where X=1:10
+
+student_details_new.xls ( Input Excel file ) --> wb_student_details (Python variable for this excel sheet)
+Student_Marks.xls (Input Excel file ) --> wb_subject (Python variable for this excel sheet)
+By wb_subject , Subject Code,  Subject Name and Credits for each subject is stroed in different variable subject_code , subject_name and course_credits
+subjects_grades is a list of list, where each inner list contains the grades of all students for a particular subject. 
+So, subjects_grades[n] gives the list of grades of all students for the "nth" subject, and subjects_grades[n][k] gives the grade of the "kth" student in the "nth" subject.
+Means "n" represents the subject index and "k" represents the student index.
+
+Reportlib Canvas :
+1 inch = 2.54 cm = 72 points
+1 cm = 28.346 points |  1 point = 0.0353 cm

@@ -46,6 +46,14 @@ This is a Python program with tkinter GUI that generates results of a complete c
 - [@ArpitMourya](https://www.github.com/ArpitMourya)
 - [@PiyushPanday](https://www.linkedin.com/in/piyush-pandey-10812423a/)
 
+## Install Requirements
+
+- Install required Python packages listed in `requirements.txt`:
+
+```
+pip install -r requirements.txt
+```
+
 ## Building the .exe
 
 - **Command:** 
@@ -69,3 +77,36 @@ Be sure to run the command from your project folder (where `python_script.py` is
 
 ## Notes
 - If you want to change the Name of Course in UTD.csv Output file for Digital Marksheet Generation, Change the `course name` field in the [./student_detail_new.xls](./student_detail_new.xls) file.
+
+## Data structures (variables) used in the code
+
+The code stores per-semester and per-student values in **Lists** named by semester index `X` where `X` ranges from 1 to 10:
+
+- `credit_sem_X`: Total Credits (sum of all subject credits) for semester `X` (element datatype: `int`).
+- `student_sem_X`: SGPA for semester `X` for each student (element datatype: `float`).
+- `attempt_sem_X`: Total number of attempts for the main examination in semester `X` for each student (element datatype: `int`).
+- `result_sem_X`: Result for semester `X` for each student — one of `PASS`, `ATKT`, `FAIL` (element datatype: `str`).
+
+
+Input Excel workbook variables used in the code:
+
+- `wb_student_details`: Python variable for the input Excel file `student_details_new.xls` (student detail sheet).
+- `wb_subject`: Python variable for the input Excel file `Student_Marks.xls` (subject marks sheets).
+
+Subject metadata stored by the program (per subject lists):
+
+- `subject_code`: Subject code for each subject (list of `str`).
+- `subject_name`: Subject name for each subject (list of `str`).
+- `course_credits`: Credits for each subject (list of `int`).
+- `subjects_grades`: subjects_grades is a list of list, where each inner list contains the grades of all students for a particular    subject. So
+  - `subjects_grades[n]` gives the list of grades of all students for the **"nth"** subject, and 
+  - `subjects_grades[n][k]` gives the grade of the **"kth"** student in the "nth" subject. 
+  - **"n"** represents the subject index and **"k"** represents the student index.
+
+## ReportLab Canvas units
+
+- 1 inch = 2.54 cm = 72 points
+- 1 cm ≈ 28.346 points
+- 1 point ≈ 0.0353 cm
+
+These conversions are useful when positioning elements on the ReportLab `Canvas` (the code uses point units internally; constants are provided in the source to convert millimetres to points).
