@@ -70,7 +70,7 @@ sem_grade_avg = 0
 MM_TO_PT = 72.0 / 25.4  # 1 mm in points (~2.83464567)
 
 def help():
-    open("https://github.com/ArpitMourya/Result_generator")
+    open("https://github.com/ArpitMourya/Result_generator/tree/main")
 def generate_result():
     global ent_date
     ent_date = date_text.get()
@@ -1145,7 +1145,7 @@ root.title("SOI DAVV")
 # create the widgets
 department = tk.Label(
     root, text="School of Instrumentation, DAVV, Indore", fg="green", font="Verdana 20")
-tool = tk.Label(root, text="PDF Generator Software",
+tool = tk.Label(root, text="Result Generator Software",
                 fg="black", font="Verdana 16")
 note = tk.Label(
     root, text="Note : Please select the excel files of subject results and student_info and click on generate results.", font=verdana_12)
