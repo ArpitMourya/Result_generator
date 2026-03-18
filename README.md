@@ -110,3 +110,15 @@ Subject metadata stored by the program (per subject lists):
 - 1 point ≈ 0.0353 cm
 
 These conversions are useful when positioning elements on the ReportLab `Canvas` (the code uses point units internally; constants are provided in the source to convert millimetres to points).
+
+## ATKT Examination Marksheet Generation Rules (Marking in Subject Excel sheets)
+
+- Write `ATKT` (or `ATKT2`, `ATKT3`, etc. Maximum `ATKT9` is acceptable) in the last column of the subject Excel sheet, in front of each student who has an ATKT for that subject.
+- Meaning of values in the last column:
+  - Blank -> 1st Examination (Main) attempt
+  - `ATKT` -> 2nd Examination attempt
+  - `ATKT2` -> 3rd Examination attempt
+  - `ATKT3` -> 4th Examination attempt
+- Rules and notes:
+  - Either leave the last column blank (for main attempt) or use a single ATKT level like `ATKT`/`ATKT2` for ATKT students — do not mix different ATKT levels within the same subject sheet.
+  - Across different subject sheets you should also avoid inconsistent mixes of ATKT levels for the same exam batch (for example, prefer the same attempt-level convention across files).

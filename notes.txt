@@ -46,3 +46,13 @@ Means "n" represents the subject index and "k" represents the student index.
 Reportlib Canvas :
 1 inch = 2.54 cm = 72 points
 1 cm = 28.346 points |  1 point = 0.0353 cm
+
+If you want to generate Marksheet for ATKT Examination:
+ Write ATKT ( or ATKT2 or ATKT3 and so on)  in the last column of Subject Excel sheet, in front of each student who has ATKT.
+In the last column of Subject Excel sheet:
+ Blank -> 1st Examination (Main) Examination attempt 
+ ATKT -> 2nd Examination attempt
+ ATKT2 -> 3rd Examination attempt
+ ATKT3 -> 4th Examination attempt
+
+ Either leave blank or ATKTX in Subject Excel sheet, Do not Mix like , In One subject excel ATKT2 and another have ATKT3.

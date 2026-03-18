@@ -51,6 +51,7 @@ students_roll_no = []
 student_enroloment_no = []
 #subjects_grades = [[0]*33]*12
 subjects_grades = []
+subjects_atkt_status = []
 subject_code = []
 sem_grade_avg_list=[]
 overall_result = []
@@ -99,12 +100,14 @@ def generate_result():
     global output_folder
     global no_of_files
     global no_of_students
+    global subjects_atkt_status
     wb_subject.clear()
     subject_code.clear()
     subject_name.clear()
     course_credits.clear()
     sem_grade_avg_list.clear()
     subjects_grades.clear()
+    subjects_atkt_status.clear()
     overall_result.clear()
 
     students_name.clear(),       students_roll_no.clear(),    student_enroloment_no.clear()
@@ -239,15 +242,30 @@ def generate_result():
                 subjects_grades[n][k] gives the grade of the "kth" student in the "nth" subject.
                 Means "n" represents the subject index and "k" represents the student index.
             """
+            #atkt_marksheet_generation=False
             # print(f"subjects_grades {(subjects_grades)}")
-            atkt_status = []
-            for k in range(stud_count):
-                try:
-                    atkt_status.append((wb_subject[n].cell_value(k+8,11)))
-                except:
-                    print(f"Error fetching ATKT status for k {k} and n {n}")
-            print(atkt_status)
+            if wb_subject[n].ncols == 12:  # Usally 11 columns but Extra column for ATKT Examination Marksheet Re-Generation
+                """
+                This block of code is for only ATKT Examination Marksheet Re-Generation
+                """ 
+                #atkt_marksheet_generation = True
+                atkt_status = []
+                #print("ATKT Examination Marksheet Re-Generation")
+                for k in range(stud_count):
+                    try:
+                        atkt_status.append((wb_subject[n].cell_value(k+8,11)))
+                    except:
+                        print(f"Error fetching ATKT status for k {k} and n {n}")
+                #print("Subject", n, "ATKT Status:", atkt_status)
+                subjects_atkt_status.append(atkt_status)
+            else:
+                #atkt_marksheet_generation=False
+                subjects_atkt_status.append(['']*stud_count)
+
             n = n+1
+        
+        print("All  ATKT RE-Marksheet Generation Status:", subjects_atkt_status)
+
         print(f"wb_subject {len(wb_subject)}")
         print(f"subject_code {len(subject_code)}")
         print(f"subject_name {len(subject_name)}")
@@ -417,6 +435,7 @@ def createpdfs():
     global batch_year
     global output_folder
     global two_year
+    global subjects_atkt_status
     #writing in student_detail_file at result folder (XL)
     rd =xlrd.open_workbook(students_detail_wb)
     wb= copy(rd)
@@ -776,6 +795,18 @@ def createpdfs():
             result_canvas[result_index].drawString(start_x,start_y,subj)
             start_y = start_y-20
 
+        student_examination_attempt = 1
+        for i in range(sub_count):
+            atkt_marksheet_check = (subjects_atkt_status[i][result_index]).strip().lower()
+            
+            if 'atkt' in atkt_marksheet_check:
+                if atkt_marksheet_check[-1].isdigit():
+                    student_examination_attempt = int(atkt_marksheet_check[-1])+1
+                    break
+                elif atkt_marksheet_check[-1] == 't':
+                    student_examination_attempt = 2
+                    break
+
         start_x = 405
         start_y = 535
         for credit in course_credits:
@@ -792,7 +823,10 @@ def createpdfs():
         start_x = 470
         start_y = 535
         for i in range(sub_count):
-            result_canvas[result_index].drawString(start_x,start_y,(subjects_grades[i][result_index]))
+            astrisk = ''
+            if 'atkt' in subjects_atkt_status[i][result_index].strip().lower():
+                astrisk = "*"
+            result_canvas[result_index].drawString(start_x,start_y,(subjects_grades[i][result_index])+ astrisk)
             if 'F' in subjects_grades[i][result_index]: # This condition is to check if student has failed in any subject, if yes then it will be considered as ATKT.
                 is_ATKT_fail = 'ATKT'
                 fail_credits += course_credits[i] 
@@ -849,7 +883,7 @@ def createpdfs():
         #credits
         result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],y_coordinate_for_result,str(is_ATKT_fail))
         #if "PASS" in is_ATKT_fail.upper():
-        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],y_coordinate_for_attempt,str(1))
+        result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],y_coordinate_for_attempt,str(student_examination_attempt))
         result_canvas[result_index].drawString(co_ordinate[check_current_sem(current_sem)],y_coordinate_for_credit,str(int(sum(course_credits))))
 
         today = date.today()
@@ -943,7 +977,7 @@ def createpdfs():
         wb1.save(output_folder+"\\"+"student_detail_new.xls")
         w_sheet.write(strt_index_r,strt_index_c+20,str(is_ATKT_fail))
         wb1.save(output_folder+"\\"+"student_detail_new.xls")
-        w_sheet.write(strt_index_r,strt_index_c+30,1)
+        w_sheet.write(strt_index_r,strt_index_c+30,student_examination_attempt)
         wb1.save(output_folder+"\\"+"student_detail_new.xls")
         strt_index_r+=1
     creat_master_xlsheet()
