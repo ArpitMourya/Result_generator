@@ -1,10 +1,11 @@
-# Result Generator
+# Result Generator Software
 
-This is a Python program with tkinter GUI that generates results of a complete class in just a few clicks. The user just has to select the path of student detail and subject marks excel sheets. Then this program generates PDFs of results in the destination folder. It is a convenient tool for teachers who want to generate results for a complete class quickly and efficiently.
+Result Generator Software is an automation tool to generate Result & Marksheet for *School of Instrumentation, DAVV*. This tool is created using Python and tkinter GUI that generates results of a complete class in just a few clicks. The user just has to select the path of student detail and subject marks excel sheets ( example `test_input_files/`). Then this program generates **Marksheet PDF** for each student with their respective subject grades and previous semester SGPA, along with a **Master Sheet** which contains grades of all students for all subjects for that particular semester. Further this tool also updates input student detail excel sheet with current semester results which is required to generate result for the next semester. All output files will be stored in selected destination folder (example `test_output_files`). It is a convenient tool for teachers who want to generate results for a complete class quickly and efficiently.
 
 ## Follow these steps to generate results.
 - Run the .exe file
-  ![WhatsApp Image 2023-11-14 at 19 57 29](https://github.com/ArpitMourya/Result_generator/assets/99241859/de3e7163-9d8a-445e-8285-c4480ec7cb9e)
+  <img width="998" height="620" alt="image" src="https://github.com/user-attachments/assets/a8489150-cb95-4fc3-bfea-6ee23b0a850c" />
+
 
 - Select the *Student info sheet*.
 
