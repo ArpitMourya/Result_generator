@@ -6,8 +6,7 @@ Result Generator Software is an automation tool to generate Result & Marksheet f
 - Run the .exe file
   <img width="998" height="620" alt="image" src="https://github.com/user-attachments/assets/a8489150-cb95-4fc3-bfea-6ee23b0a850c" />
 
-
-- Select the *Student info sheet*.
+*Student info sheet*.
 
   ![WhatsApp Image 2023-11-14 at 19 57 37](https://github.com/ArpitMourya/Result_generator/assets/99241859/8dcc4c6d-e6c4-4d79-980c-5abc0ada3815)
 
