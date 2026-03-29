@@ -10,6 +10,7 @@ from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.pagesizes import letter, A4
 from datetime import date
 from webbrowser import open
+from pathlib import Path
 
 select_subject = "Select Subject result File"
 verdana_12 = "Verdana 12"
@@ -248,7 +249,6 @@ def generate_result():
                 """
                 This block of code is for only ATKT Examination Marksheet Re-Generation
                 """ 
-                #atkt_marksheet_generation = True
                 atkt_status = []
                 #print("ATKT Examination Marksheet Re-Generation")
                 for k in range(stud_count):
@@ -259,7 +259,6 @@ def generate_result():
                 #print("Subject", n, "ATKT Status:", atkt_status)
                 subjects_atkt_status.append(atkt_status)
             else:
-                #atkt_marksheet_generation=False
                 subjects_atkt_status.append(['']*stud_count)
 
             n = n+1
@@ -445,10 +444,17 @@ def createpdfs():
     #     new_course_name = "MASTER OF TECHNOLOGY (INTERNET OF THINGS)"
     # else:
     #     new_course_name = "BACHELOR OF TECHNOLOGY (INTERNET OF THINGS)"
-    
-    for student in students_name:
 
-        result_canvas.insert(result_index,Canvas(output_folder+"\\"+student_enroloment_no[result_index]+".pdf",pagesize=A4))
+    atkt_marksheet_generation=False
+    for student in students_name:
+        atkt_string=''
+        for i in range(sub_count):       
+            if 'atkt' in (subjects_atkt_status[i][result_index]).strip().lower():
+                atkt_marksheet_generation=True
+                atkt_string='_'+(subjects_atkt_status[i][result_index]).strip().upper()
+                break
+
+        result_canvas.insert(result_index,Canvas(output_folder+"\\"+student_enroloment_no[result_index]+atkt_string+".pdf",pagesize=A4))
         result_canvas[result_index].setTitle(student)
         
         """
@@ -980,7 +986,21 @@ def createpdfs():
         w_sheet.write(strt_index_r,strt_index_c+30,student_examination_attempt)
         wb1.save(output_folder+"\\"+"student_detail_new.xls")
         strt_index_r+=1
+    
+    if atkt_marksheet_generation:
+        """
+        This is a condition to delete non-ATKT marksheet from the output folder, if ATKT marksheet generation is enabled.
+        i.e. If teacher is generating marksheet only for ATKT examination, then there is no need to keep non-ATKT marksheet in the output folder, so it will be deleted to avoid confusion.
+        """
+        directory = Path(output_folder)
+        pattern='*ATKT*'
+        for file_path in directory.iterdir():
+            if file_path.is_file() and file_path.suffix.lower() == ".pdf" and not file_path.match(pattern):
+                print("Non ATKT Marksheet Deletion : ",file_path.name)
+                file_path.unlink(missing_ok=True)
+    
     creat_master_xlsheet()
+
 def creat_master_xlsheet():
     global date_of_issue
     global two_year
