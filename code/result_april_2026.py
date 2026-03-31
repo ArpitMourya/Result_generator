@@ -1272,9 +1272,9 @@ note.grid(row=2, column=0, columnspan=3,padx=20,pady=20)
 date_text.grid(row=17,column=2,columnspan=2,pady=5)
 date_sel.grid(row=16,column=2,columnspan=2,pady=5)
 ack_text = (
-        "   Developers of Result Generator \t\t\t Project Guides\n\n"
-        "   Arpit Mourya\t\t Param Sahu\t\t Dr. Ratnesh Gupta, Professor & Head\n"
-        "   2021-2026\t\t 2022-2027\t\t Dr. Mahendra Rathor, Assistant Professor \n"
+        "   Developers of Result Generator \t\t\t Project Guide\n\n"
+        "   Arpit Mourya\t\t Param Sahu\t\t Dr. Ratnesh Gupta \n"
+        "   2021-2026\t\t 2022-2027\t\t Professor & Head of Department \n"
         "   \t\t \t\t \n"
         "   School of \t\t School of \t\t School of \n"
         "   Instrumentation\t\t Instrumentation\t\t Instrumentation\n"
