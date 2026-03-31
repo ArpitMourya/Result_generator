@@ -454,7 +454,7 @@ def createpdfs():
                 atkt_string='_'+(subjects_atkt_status[i][result_index]).strip().upper()
                 break
 
-        result_canvas.insert(result_index,Canvas(output_folder+"\\"+student_enroloment_no[result_index]+atkt_string+".pdf",pagesize=A4))
+        result_canvas.insert(result_index,Canvas(output_folder+"\\"+"_".join(student.strip().split(" "))+atkt_string+".pdf",pagesize=A4))
         result_canvas[result_index].setTitle(student)
         
         """
@@ -829,10 +829,8 @@ def createpdfs():
         start_x = 470
         start_y = 535
         for i in range(sub_count):
-            astrisk = ''
-            if 'atkt' in subjects_atkt_status[i][result_index].strip().lower():
-                astrisk = "*"
-            result_canvas[result_index].drawString(start_x,start_y,(subjects_grades[i][result_index])+ astrisk)
+            
+            result_canvas[result_index].drawString(start_x,start_y,(subjects_grades[i][result_index]))
             if 'F' in subjects_grades[i][result_index]: # This condition is to check if student has failed in any subject, if yes then it will be considered as ATKT.
                 is_ATKT_fail = 'ATKT'
                 fail_credits += course_credits[i] 
@@ -853,9 +851,12 @@ def createpdfs():
         start_y = 535
         grade_credit_sum = 0
         for i in range(sub_count):
+            astrisk = ''
+            if 'atkt' in subjects_atkt_status[i][result_index].strip().lower():
+                astrisk = "*"
             grade_credit = getGradeintocredit(course_credits[i],subjects_grades[i][result_index])
             grade_credit_sum = grade_credit_sum + grade_credit
-            result_canvas[result_index].drawString(start_x,start_y,(str)(grade_credit))
+            result_canvas[result_index].drawString(start_x,start_y,str(grade_credit)+ astrisk)
             start_y = start_y-20
 
         if (check_current_sem(current_sem) in [10]) or (two_year and check_current_sem(current_sem)==4):
