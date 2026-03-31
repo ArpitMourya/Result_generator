@@ -4,7 +4,7 @@ Result Generator Software is an automation tool to generate Result & Marksheet f
 
 ## Follow these steps to generate results.
 - Run the .exe file
-  <img width="998" height="620" alt="image" src="https://github.com/user-attachments/assets/a8489150-cb95-4fc3-bfea-6ee23b0a850c" />
+  <img width="950" height="749" alt="image" src="https://github.com/user-attachments/assets/2b6c07bd-a61c-47ea-97d2-99e603b2246b" />
 
 *Student info sheet*.
 
